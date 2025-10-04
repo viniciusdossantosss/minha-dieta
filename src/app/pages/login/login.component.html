@@ -1,0 +1,107 @@
+<div class="login-container">
+
+  <!-- Formulário de Login -->
+  <div class="login-content">
+    <div class="login-card">
+      <!-- Seletor de Tipo de Usuário -->
+      <div class="user-type-selector">
+        <div class="user-type-options">
+          <button 
+            type="button"
+            class="user-type-option"
+            [class.active]="userType === 'nutritionist'"
+            (click)="switchUserType('nutritionist')"
+          >
+            <span class="user-icon">👩‍⚕️</span>
+            <span class="user-label">Nutricionista</span>
+          </button>
+          
+          <button 
+            type="button"
+            class="user-type-option"
+            [class.active]="userType === 'patient'"
+            (click)="switchUserType('patient')"
+          >
+            <span class="user-icon">👤</span>
+            <span class="user-label">Paciente</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulário -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campo Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email"
+            formControlName="email"
+            placeholder="Digite seu email"
+            [class.error]="isFieldInvalid('email')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('email')">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email é obrigatório</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Email inválido</span>
+          </div>
+        </div>
+
+        <!-- Campo Senha -->
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <div class="password-input">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="Digite sua senha"
+              [class.error]="isFieldInvalid('password')"
+            >
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="togglePassword()"
+            >
+              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('password')">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Senha é obrigatória</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Senha deve ter pelo menos 6 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Botão de Login -->
+        <button 
+          type="submit" 
+          class="login-button"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Entrar</span>
+          <span *ngIf="isLoading">Entrando...</span>
+        </button>
+
+        <!-- Mensagem de erro geral -->
+        <div class="general-error" *ngIf="loginError">
+          {{ loginError }}
+        </div>
+      </form>
+
+      <!-- Link para cadastro (apenas nutricionistas) -->
+      <div class="register-link" *ngIf="userType === 'nutritionist'">
+        <p>Ainda não tem conta?</p>
+        <button class="link-button" (click)="goToRegister()">
+          Cadastre-se como Nutricionista
+        </button>
+      </div>
+
+      <!-- Informação para pacientes -->
+      <div class="patient-info" *ngIf="userType === 'patient'">
+        <p class="info-text">
+          <strong>Paciente:</strong> Suas credenciais foram fornecidas pelo seu nutricionista.
+          Entre em contato caso tenha dúvidas.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

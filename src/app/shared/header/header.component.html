@@ -1,0 +1,53 @@
+<header class="global-header">
+  <div class="header-container">
+    <!-- Logo/Brand -->
+    <div class="brand" (click)="goHome()">
+      <span class="logo-icon">🥗</span>
+      <span class="brand-name">Minha Dieta</span>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+      <a href="/" class="nav-link" [class.active]="isActive('/')">Home</a>
+      <a href="/login" class="nav-link" [class.active]="isActive('/login')">Login</a>
+      <a href="/register-nutritionist" class="nav-link" [class.active]="isActive('/register')">Cadastro</a>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <a href="/" class="mobile-nav-link" (click)="closeMobileMenu()">
+      <span class="mobile-icon">🏠</span>
+      Home
+    </a>
+    <a href="/login" class="mobile-nav-link" (click)="closeMobileMenu()">
+      <span class="mobile-icon">🔐</span>
+      Login
+    </a>
+    <a href="/register-nutritionist" class="mobile-nav-link" (click)="closeMobileMenu()">
+      <span class="mobile-icon">📝</span>
+      Cadastro Nutricionista
+    </a>
+    
+    <div class="mobile-nav-divider"></div>
+    
+    <a href="/terms-of-service" class="mobile-nav-link secondary" (click)="closeMobileMenu()">
+      <span class="mobile-icon">📋</span>
+      Termos de Uso
+    </a>
+    <a href="/privacy-policy" class="mobile-nav-link secondary" (click)="closeMobileMenu()">
+      <span class="mobile-icon">🔒</span>
+      Política de Privacidade
+    </a>
+  </nav>
+
+  <!-- Overlay for mobile menu -->
+  <div class="mobile-overlay" [class.active]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
+</header>

@@ -1,0 +1,177 @@
+<div class="register-container">
+
+  <!-- Formulário de Cadastro -->
+  <div class="register-content">
+    <div class="register-card">
+      <!-- Ícone e descrição -->
+      <div class="header-section">
+        <div class="icon">👩‍⚕️</div>
+        <h2>Criar Conta</h2>
+        <p class="subtitle">Preencha seus dados para começar a gerenciar seus pacientes</p>
+      </div>
+
+      <!-- Formulário -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Nome Completo -->
+        <div class="form-group">
+          <label for="fullName">Nome Completo *</label>
+          <input 
+            type="text" 
+            id="fullName"
+            formControlName="fullName"
+            placeholder="Digite seu nome completo"
+            [class.error]="isFieldInvalid('fullName')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('fullName')">
+            <span *ngIf="registerForm.get('fullName')?.errors?.['required']">Nome é obrigatório</span>
+            <span *ngIf="registerForm.get('fullName')?.errors?.['minlength']">Nome deve ter pelo menos 3 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input 
+            type="email" 
+            id="email"
+            formControlName="email"
+            placeholder="Digite seu email profissional"
+            [class.error]="isFieldInvalid('email')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('email')">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email é obrigatório</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Email inválido</span>
+          </div>
+        </div>
+
+        <!-- CRN -->
+        <div class="form-group">
+          <label for="crn">CRN (Conselho Regional de Nutricionistas) *</label>
+          <input 
+            type="text" 
+            id="crn"
+            formControlName="crn"
+            placeholder="Ex: 12345/SP"
+            [class.error]="isFieldInvalid('crn')"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('crn')">
+            <span *ngIf="registerForm.get('crn')?.errors?.['required']">CRN é obrigatório</span>
+            <span *ngIf="registerForm.get('crn')?.errors?.['pattern']">Formato inválido. Use: 12345/SP</span>
+          </div>
+        </div>
+
+        <!-- Telefone -->
+        <div class="form-group">
+          <label for="phone">Telefone *</label>
+          <input 
+            type="tel" 
+            id="phone"
+            formControlName="phone"
+            placeholder="(11) 99999-9999"
+            [class.error]="isFieldInvalid('phone')"
+            (input)="formatPhone($event)"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('phone')">
+            <span *ngIf="registerForm.get('phone')?.errors?.['required']">Telefone é obrigatório</span>
+            <span *ngIf="registerForm.get('phone')?.errors?.['pattern']">Formato inválido</span>
+          </div>
+        </div>
+
+        <!-- Senha -->
+        <div class="form-group">
+          <label for="password">Senha *</label>
+          <div class="password-input">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="Mínimo 8 caracteres"
+              [class.error]="isFieldInvalid('password')"
+            >
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="togglePassword()"
+            >
+              {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('password')">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">Senha é obrigatória</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Senha deve ter pelo menos 8 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Confirmação de Senha -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Senha *</label>
+          <div class="password-input">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="confirmPassword"
+              formControlName="confirmPassword"
+              placeholder="Digite a senha novamente"
+              [class.error]="isFieldInvalid('confirmPassword')"
+            >
+            <button 
+              type="button" 
+              class="toggle-password"
+              (click)="toggleConfirmPassword()"
+            >
+              {{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          <div class="error-message" *ngIf="isFieldInvalid('confirmPassword')">
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirmação é obrigatória</span>
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Senhas não coincidem</span>
+          </div>
+        </div>
+
+        <!-- Checkbox Termos -->
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              formControlName="acceptTerms"
+              [class.error]="isFieldInvalid('acceptTerms')"
+            >
+            <span class="checkmark"></span>
+            <span class="checkbox-text">
+              Li e aceito os 
+              <a href="/terms-of-service" target="_blank" class="terms-link">Termos de Uso</a>
+              e a 
+              <a href="/privacy-policy" target="_blank" class="terms-link">Política de Privacidade</a>
+            </span>
+          </label>
+          <div class="error-message" *ngIf="isFieldInvalid('acceptTerms')">
+            <span *ngIf="registerForm.get('acceptTerms')?.errors?.['required']">Você deve aceitar os termos</span>
+          </div>
+        </div>
+
+        <!-- Botão de Cadastro -->
+        <button 
+          type="submit" 
+          class="register-button"
+          [disabled]="registerForm.invalid || isLoading"
+        >
+          <span *ngIf="!isLoading">Criar Conta</span>
+          <span *ngIf="isLoading">Criando conta...</span>
+        </button>
+
+        <!-- Mensagem de erro geral -->
+        <div class="general-error" *ngIf="registerError">
+          {{ registerError }}
+        </div>
+      </form>
+
+      <!-- Link para login -->
+      <div class="login-link">
+        <p>Já tem uma conta?</p>
+        <button class="link-button" (click)="goToLogin()">
+          Fazer Login
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

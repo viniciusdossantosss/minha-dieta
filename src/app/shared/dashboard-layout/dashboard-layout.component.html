@@ -1,0 +1,26 @@
+<div class="dashboard-layout">
+  <!-- Side Menu -->
+  <app-side-menu 
+    [isOpen]="isSideMenuOpen"
+    [userProfile]="userProfile"
+    (menuClosed)="closeSideMenu()">
+  </app-side-menu>
+
+  <!-- Main Content Area -->
+  <div class="main-content" [class.menu-open]="isSideMenuOpen">
+    <!-- Mobile Header with Menu Button -->
+    <div class="mobile-header">
+      <button class="menu-toggle" (click)="toggleSideMenu()">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+      <h1 class="page-title">{{ pageTitle }}</h1>
+    </div>
+
+    <!-- Content -->
+    <div class="content-area">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

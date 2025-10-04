@@ -1,0 +1,243 @@
+/* Mobile First - Base styles */
+.home-container {
+  background: #f8f9fa;
+}
+
+/* Hero Section - Primeira e principal */
+.hero-section {
+  background: linear-gradient(135deg, #7A9B5C 0%, #6B8E4E 100%);
+  color: white;
+  padding: 4rem 1rem;
+  text-align: center;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+  opacity: 0.95;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.access-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.btn-primary, .btn-secondary, .btn-cta {
+  padding: 1.2rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.btn-primary {
+  background: white;
+  color: #7A9B5C;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-secondary:hover {
+  background: white;
+  color: #7A9B5C;
+  transform: translateY(-3px);
+}
+
+.btn-icon {
+  font-size: 1.3rem;
+}
+
+/* Features Section */
+.features-section {
+  background: white;
+  color: #333;
+  padding: 5rem 1rem;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  color: #7A9B5C;
+}
+
+.features-grid {
+  display: grid;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  background: #f8f9fa;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  color: #7A9B5C;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.feature-card p {
+  line-height: 1.6;
+  color: #666;
+  font-size: 1rem;
+}
+
+/* CTA Section */
+.cta-section {
+  background: #2c3e50;
+  color: white;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-cta {
+  background: #7A9B5C;
+  color: white;
+  padding: 1.3rem 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  margin: 0 auto;
+  display: inline-block;
+}
+
+.btn-cta:hover {
+  background: #6B8E4E;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(122, 155, 92, 0.4);
+}
+
+/* Tablet styles - 768px and up */
+@media (min-width: 768px) {
+  .hero-section {
+    padding: 5rem 2rem;
+    min-height: 80vh;
+  }
+  
+  .hero-title {
+    font-size: 4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.4rem;
+    max-width: 80%;
+  }
+  
+  .access-buttons {
+    flex-direction: row;
+    max-width: 600px;
+    gap: 2rem;
+  }
+  
+  .features-section {
+    padding: 6rem 2rem;
+  }
+  
+  .section-title {
+    font-size: 3rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+  
+  .cta-section {
+    padding: 5rem 2rem;
+  }
+}
+
+/* Desktop styles - 1024px and up */
+@media (min-width: 1024px) {
+  .hero-section {
+    padding: 6rem 2rem;
+  }
+  
+  .hero-title {
+    font-size: 4.5rem;
+  }
+  
+  .features-section {
+    padding: 7rem 2rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4rem;
+  }
+  
+  .cta-section {
+    padding: 6rem 2rem;
+  }
+}

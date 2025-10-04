@@ -1,0 +1,93 @@
+<div class="side-menu" [class.open]="isOpen">
+  <!-- Header do Menu -->
+  <div class="menu-header">
+    <div class="user-profile">
+      <div class="user-avatar">
+        <img [src]="userProfile.avatar || '/assets/default-avatar.png'" 
+             [alt]="userProfile.name"
+             onerror="this.src='/assets/default-avatar.png'">
+      </div>
+      <div class="user-info">
+        <h3 class="user-name">{{ userProfile.name }}</h3>
+        <p class="user-type">{{ userProfile.type === 'nutritionist' ? 'Nutricionista' : 'Paciente' }}</p>
+      </div>
+    </div>
+    
+    <!-- Botão fechar (apenas mobile) -->
+    <button class="close-button mobile-only" (click)="closeMenu()">
+      <span class="close-icon">×</span>
+    </button>
+  </div>
+
+  <!-- Navegação -->
+  <nav class="menu-navigation">
+    <ul class="nav-list">
+      <!-- Navegação do Nutricionista -->
+      <ng-container *ngIf="userProfile.type === 'nutritionist'">
+        <li class="nav-item">
+          <a href="/nutritionist/dashboard" class="nav-link" [class.active]="isActive('/nutritionist/dashboard')" (click)="closeMenu()">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/nutritionist/patients" class="nav-link" [class.active]="isActive('/nutritionist/patients')" (click)="closeMenu()">
+            <span class="nav-icon">👥</span>
+            <span class="nav-text">Meus Pacientes</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/nutritionist/meal-options" class="nav-link" [class.active]="isActive('/nutritionist/meal-options')" (click)="closeMenu()">
+            <span class="nav-icon">🍽️</span>
+            <span class="nav-text">Opções de Refeições</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/nutritionist/profile" class="nav-link" [class.active]="isActive('/nutritionist/profile')" (click)="closeMenu()">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Configurações</span>
+          </a>
+        </li>
+      </ng-container>
+
+      <!-- Navegação do Paciente -->
+      <ng-container *ngIf="userProfile.type === 'patient'">
+        <li class="nav-item">
+          <a href="/patient/dashboard" class="nav-link" [class.active]="isActive('/patient/dashboard')" (click)="closeMenu()">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/patient/my-diet" class="nav-link" [class.active]="isActive('/patient/my-diet')" (click)="closeMenu()">
+            <span class="nav-icon">🥗</span>
+            <span class="nav-text">Minha Dieta</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/patient/daily-meals" class="nav-link" [class.active]="isActive('/patient/daily-meals')" (click)="closeMenu()">
+            <span class="nav-icon">🍽️</span>
+            <span class="nav-text">Refeições do Dia</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/patient/profile" class="nav-link" [class.active]="isActive('/patient/profile')" (click)="closeMenu()">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-text">Perfil</span>
+          </a>
+        </li>
+      </ng-container>
+    </ul>
+  </nav>
+
+  <!-- Footer do Menu -->
+  <div class="menu-footer">
+    <button class="logout-button" (click)="logout()">
+      <span class="nav-icon">🚪</span>
+      <span class="nav-text">Sair</span>
+    </button>
+  </div>
+</div>
+
+<!-- Overlay para mobile -->
+<div class="menu-overlay" [class.active]="isOpen" (click)="closeMenu()"></div>

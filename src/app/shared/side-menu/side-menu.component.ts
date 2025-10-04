@@ -1,0 +1,50 @@
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+interface UserProfile {
+  name: string;
+  type: 'nutritionist' | 'patient';
+  avatar?: string;
+  email?: string;
+}
+
+@Component({
+  selector: 'app-side-menu',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './side-menu.component.html',
+  styleUrls: ['./side-menu.component.css']
+})
+export class SideMenuComponent {
+  @Input() isOpen = false;
+  @Input() userProfile: UserProfile = {
+    name: 'Usuário',
+    type: 'nutritionist'
+  };
+  
+  @Output() menuClosed = new EventEmitter<void>();
+
+  constructor(private router: Router) {}
+
+  closeMenu(): void {
+    this.menuClosed.emit();
+  }
+
+  isActive(route: string): boolean {
+    return this.router.url.includes(route);
+  }
+
+  logout(): void {
+    // Aqui você implementará a lógica de logout
+    console.log('Logout clicked');
+    
+    // Limpar dados do usuário (localStorage, sessionStorage, etc.)
+    // localStorage.removeItem('user');
+    // sessionStorage.clear();
+    
+    // Redirecionar para home
+    this.router.navigate(['/']);
+    this.closeMenu();
+  }
+}

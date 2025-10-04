@@ -1,0 +1,101 @@
+<app-dashboard-layout 
+  pageTitle="Dashboard Nutricionista"
+  [userProfile]="userProfile">
+  
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <h1 class="welcome-title">Olá, {{ userProfile.name }}! 👋</h1>
+    <p class="welcome-subtitle">Aqui está um resumo da sua atividade hoje</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card patients">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.totalPatients }}</h3>
+        <p class="stat-label">Pacientes Ativos</p>
+      </div>
+    </div>
+
+    <div class="stat-card menus">
+      <div class="stat-icon">🍽️</div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.totalMenus }}</h3>
+        <p class="stat-label">Cardápios Criados</p>
+      </div>
+    </div>
+
+    <div class="stat-card activity">
+      <div class="stat-icon">📊</div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.weeklyActivity }}</h3>
+        <p class="stat-label">Atividade Semanal</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <h2 class="section-title">Ações Rápidas</h2>
+    <div class="actions-grid">
+      <button class="action-card primary" (click)="addNewPatient()">
+        <div class="action-icon">➕</div>
+        <div class="action-content">
+          <h3>Adicionar Paciente</h3>
+          <p>Cadastrar um novo paciente</p>
+        </div>
+      </button>
+
+      <button class="action-card secondary" (click)="createMenu()">
+        <div class="action-icon">📝</div>
+        <div class="action-content">
+          <h3>Criar Cardápio</h3>
+          <p>Montar novo cardápio</p>
+        </div>
+      </button>
+
+      <button class="action-card tertiary" (click)="viewReports()">
+        <div class="action-icon">📈</div>
+        <div class="action-content">
+          <h3>Relatórios</h3>
+          <p>Ver progresso dos pacientes</p>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recent Patients -->
+  <div class="recent-patients-section">
+    <div class="section-header">
+      <h2 class="section-title">Pacientes Recentes</h2>
+      <a href="/nutritionist/patients" class="view-all-link">Ver todos</a>
+    </div>
+    
+    <div class="patients-list">
+      <div class="patient-card" *ngFor="let patient of recentPatients">
+        <div class="patient-avatar">
+          <img [src]="patient.avatar || '/assets/default-avatar.png'" 
+               [alt]="patient.name"
+               onerror="this.src='/assets/default-avatar.png'">
+        </div>
+        <div class="patient-info">
+          <h4 class="patient-name">{{ patient.name }}</h4>
+          <p class="patient-age">{{ patient.age }} anos</p>
+          <p class="patient-status" [class]="patient.status">
+            {{ getStatusText(patient.status) }}
+          </p>
+        </div>
+        <div class="patient-actions">
+          <button class="btn-icon" (click)="viewPatient(patient.id)" title="Ver detalhes">
+            👁️
+          </button>
+          <button class="btn-icon" (click)="editMenu(patient.id)" title="Editar cardápio">
+            ✏️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</app-dashboard-layout>
