@@ -1,0 +1,55 @@
+/* Reutiliza estilos do patient-form.css para a base */
+@import url('../patient-form/patient-form.component.css');
+
+/* Estilos específicos para a seção de itens da refeição */
+.items-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.items-title {
+  font-size: 1.1rem; /* um pouco menor que o título da página */
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+}
+
+.item-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 0.5rem; /* Leve indentação */
+  border-left: 3px solid var(--body-background);
+}
+
+.item-quantity {
+  flex: 2;
+}
+
+.item-description {
+  flex: 3;
+}
+
+.item-actions {
+  margin-bottom: 0.5rem; /* Alinha o botão com a base dos inputs */
+}
+
+.btn-add-item {
+  /* Estilo de botão secundário */
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  background-color: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.btn-add-item:hover {
+  background-color: var(--primary-color-light);
+  color: var(--text-color-light);
+  border-color: var(--primary-color-light);
+}

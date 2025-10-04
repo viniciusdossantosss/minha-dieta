@@ -1,4 +1,81 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* 1. Definição das Variáveis de Cor e Tipografia */
+:root {
+  --primary-color: #7B8455;
+  --primary-color-light: #9DA47C; /* Tom mais claro para hover/realce */
+  --secondary-text: #6E6E6E;
+  --card-background: #FFFFFF;
+  --body-background: #F9FAFB; /* Um cinza muito claro para contraste */
+  --border-color: #EDEDED;
+  --text-color: #000000;
+  --text-color-light: #FFFFFF;
+  --disabled-bg: #EDEDED;
+  --disabled-text: #A0A0A0;
+
+  --font-family: 'Roboto', 'Inter', 'Open Sans', sans-serif;
+  --border-radius: 8px;
+}
+
+/* 2. Reset e Estilos Base para o Body */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--body-background);
+  color: var(--text-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 3. Estilos Globais para Títulos e Links */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600; /* Semi-bold por padrão */
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+/* 4. Classe de Botão Global (pode ser estendida nos componentes) */
+.btn {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-color-light);
+}
+
+.btn-primary:disabled {
+  background-color: var(--disabled-bg);
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--card-background);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}

@@ -1,41 +1,14 @@
 /* Mobile First - Base styles */
 .register-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #7A9B5C 0%, #6B8E4E 100%);
+  background: var(--body-background); /* Fundo da página conforme design system */
   padding: 0;
+  display: flex; /* Adicionado para centralizar o conteúdo */
+  justify-content: center; /* Adicionado para centralizar o conteúdo */
+  align-items: center; /* Adicionado para centralizar o conteúdo */
 }
 
-/* Header */
-.register-header {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
-.back-button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
-}
-
-.back-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.register-title {
-  color: white;
-  margin: 0;
-  margin-left: 1rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
+/* Header customizado removido */
 
 /* Content */
 .register-content {
@@ -43,15 +16,17 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  width: 100%; /* Garante que o conteúdo ocupe a largura total */
 }
 
 .register-card {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
+  background: var(--card-background); /* Fundo branco conforme design system */
+  border-radius: var(--border-radius); /* 8px conforme design system */
+  padding: 16px; /* 12-16px conforme design system */
   width: 100%;
   max-width: 500px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); */ /* Removido */
+  border: 1px solid var(--border-color); /* Borda conforme design system */
   margin-bottom: 2rem;
 }
 
@@ -64,18 +39,20 @@
 .icon {
   font-size: 4rem;
   margin-bottom: 1rem;
+  color: var(--primary-color); /* Ícone com cor primária */
 }
 
 .header-section h2 {
-  color: #7A9B5C;
+  color: var(--text-color); /* Títulos principais preto conforme design system */
   margin: 0 0 0.5rem 0;
-  font-size: 1.8rem;
+  font-size: 20px; /* 20px conforme design system */
+  font-weight: bold; /* Bold conforme design system */
 }
 
 .subtitle {
-  color: #666;
+  color: var(--secondary-text); /* Texto auxiliar cinza conforme design system */
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 14px; /* 14px conforme design system */
   line-height: 1.4;
 }
 
@@ -87,16 +64,16 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #333;
-  font-weight: 500;
-  font-size: 0.9rem;
+  color: var(--text-color); /* Texto principal preto conforme design system */
+  font-weight: 600; /* Semi-bold conforme design system */
+  font-size: 14px; /* 14px conforme design system */
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--border-color); /* Borda conforme design system */
+  border-radius: var(--border-radius); /* 8px conforme design system */
   font-size: 1rem;
   transition: border-color 0.3s ease;
   box-sizing: border-box;
@@ -104,11 +81,11 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #7A9B5C;
+  border-color: var(--primary-color); /* Cor primária no foco */
 }
 
 .form-group input.error {
-  border-color: #e74c3c;
+  border-color: #e74c3c; /* Manter cor de erro */
 }
 
 /* Password Input */
@@ -130,6 +107,7 @@
   cursor: pointer;
   font-size: 1.2rem;
   padding: 0.25rem;
+  color: var(--secondary-text); /* Cor do ícone */
 }
 
 /* Checkbox Styles */
@@ -141,7 +119,7 @@
   display: flex;
   align-items: flex-start;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 14px; /* 14px conforme design system */
   line-height: 1.4;
 }
 
@@ -152,7 +130,7 @@
 .checkmark {
   width: 20px;
   height: 20px;
-  border: 2px solid #e0e0e0;
+  border: 1px solid var(--border-color); /* Borda conforme design system */
   border-radius: 4px;
   margin-right: 0.75rem;
   margin-top: 2px;
@@ -162,29 +140,29 @@
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: #7A9B5C;
-  border-color: #7A9B5C;
+  background: var(--primary-color); /* Cor primária no checked */
+  border-color: var(--primary-color); /* Cor primária no checked */
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
   content: '✓';
   position: absolute;
-  color: white;
+  color: var(--text-color-light); /* Texto branco */
   font-size: 14px;
   top: -2px;
   left: 3px;
 }
 
 .checkbox-label input[type="checkbox"].error + .checkmark {
-  border-color: #e74c3c;
+  border-color: #e74c3c; /* Manter cor de erro */
 }
 
 .checkbox-text {
-  color: #555;
+  color: var(--secondary-text); /* Texto auxiliar cinza conforme design system */
 }
 
 .terms-link {
-  color: #7A9B5C;
+  color: var(--primary-color); /* Cor primária */
   text-decoration: none;
   font-weight: 600;
 }
@@ -195,16 +173,16 @@
 
 /* Error Messages */
 .error-message {
-  color: #e74c3c;
+  color: #e74c3c; /* Manter cor de erro */
   font-size: 0.8rem;
   margin-top: 0.25rem;
 }
 
 .general-error {
-  background: #ffeaea;
-  color: #e74c3c;
+  background: #ffeaea; /* Manter cor de erro */
+  color: #e74c3c; /* Manter cor de erro */
   padding: 0.75rem;
-  border-radius: 8px;
+  border-radius: var(--border-radius); /* 8px conforme design system */
   margin-top: 1rem;
   text-align: center;
   font-size: 0.9rem;
@@ -213,26 +191,27 @@
 /* Register Button */
 .register-button {
   width: 100%;
-  background: #7A9B5C;
-  color: white;
+  background: var(--primary-color); /* Cor primária */
+  color: var(--text-color-light); /* Texto branco */
   border: none;
-  padding: 1rem;
-  border-radius: 8px;
+  padding: 12px 16px; /* Padding conforme design system */
+  border-radius: 6px; /* 6px conforme design system */
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: bold; /* Bold conforme design system */
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 1rem;
 }
 
 .register-button:hover:not(:disabled) {
-  background: #6B8E4E;
+  background: var(--primary-color-light); /* Cor primária clara no hover */
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(122, 155, 92, 0.3);
+  box-shadow: 0 4px 15px rgba(123, 132, 85, 0.3); /* Sombra com cor primária */
 }
 
 .register-button:disabled {
-  background: #cccccc;
+  background: var(--disabled-bg); /* Fundo desabilitado */
+  color: var(--disabled-text); /* Texto desabilitado */
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -243,19 +222,19 @@
   text-align: center;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color); /* Borda conforme design system */
 }
 
 .login-link p {
-  color: #666;
+  color: var(--secondary-text); /* Texto auxiliar cinza */
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 14px; /* 14px conforme design system */
 }
 
 .link-button {
   background: none;
   border: none;
-  color: #7A9B5C;
+  color: var(--primary-color); /* Cor primária */
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -263,7 +242,7 @@
 }
 
 .link-button:hover {
-  color: #6B8E4E;
+  color: var(--primary-color-light); /* Cor primária clara no hover */
 }
 
 /* Tablet styles - 768px and up */
@@ -276,9 +255,7 @@
     padding: 3rem;
   }
   
-  .register-title {
-    font-size: 1.8rem;
-  }
+  /* Estilos de título removidos */
   
   .header-section h2 {
     font-size: 2rem;

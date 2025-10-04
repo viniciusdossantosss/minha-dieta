@@ -2,16 +2,8 @@
   <div class="modal-container" (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="modal-header">
-      <div class="meal-info">
-        <span class="meal-icon">{{ mealData?.icon }}</span>
-        <div class="meal-details">
-          <h2 class="meal-title">{{ mealData?.name }}</h2>
-          <p class="meal-subtitle">Escolha uma opção para sua refeição</p>
-        </div>
-      </div>
-      <button class="close-button" (click)="closeModal()">
-        <span class="close-icon">×</span>
-      </button>
+      <h2 class="modal-title">Selecionar {{ mealType }}</h2>
+      <button class="close-button" (click)="closeModal()">×</button>
     </div>
 
     <!-- Modal Content -->
@@ -23,49 +15,33 @@
           [class.selected]="selectedOption?.id === option.id"
           (click)="selectOption(option)"
         >
-          <!-- Option Header -->
-          <div class="option-header">
-            <h3 class="option-name">{{ option.name }}</h3>
-            <div class="option-calories" *ngIf="option.calories">
-              <span class="calories-icon">🔥</span>
-              <span class="calories-text">{{ option.calories }} cal</span>
-            </div>
-          </div>
+          <h3 class="option-name">{{ option.name }}</h3>
+          
+          <ul class="ingredients-list">
+            <li *ngFor="let item of option.items" class="ingredient-item">
+              <strong>{{ item.quantity }}</strong> - {{ item.description }}
+            </li>
+          </ul>
 
-          <!-- Option Description -->
-          <p class="option-description">{{ option.description }}</p>
-
-          <!-- Ingredients List -->
-          <div class="ingredients-section">
-            <h4 class="ingredients-title">Ingredientes:</h4>
-            <ul class="ingredients-list">
-              <li *ngFor="let ingredient of option.ingredients" class="ingredient-item">
-                {{ ingredient }}
-              </li>
-            </ul>
-          </div>
-
-          <!-- Selection Indicator -->
           <div class="selection-indicator" *ngIf="selectedOption?.id === option.id">
             <span class="check-icon">✓</span>
-            <span class="selected-text">Selecionado</span>
           </div>
+        </div>
+        <div *ngIf="availableOptions.length === 0" class="no-options">
+          <p>Nenhuma opção cadastrada para este tipo de refeição.</p>
         </div>
       </div>
     </div>
 
     <!-- Modal Footer -->
     <div class="modal-footer">
-      <button class="btn-cancel" (click)="closeModal()">
-        Cancelar
-      </button>
+      <button class="btn-secondary" (click)="closeModal()">Cancelar</button>
       <button 
-        class="btn-confirm" 
+        class="btn-primary" 
         [disabled]="!selectedOption"
         (click)="confirmSelection()"
       >
-        <span *ngIf="!selectedOption">Selecione uma opção</span>
-        <span *ngIf="selectedOption">Confirmar Escolha</span>
+        Confirmar Escolha
       </button>
     </div>
   </div>

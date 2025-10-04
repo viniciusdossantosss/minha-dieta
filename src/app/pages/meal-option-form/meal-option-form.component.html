@@ -1,0 +1,62 @@
+<app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
+  <div class="form-container">
+    <div class="page-header">
+      <button class="btn-back" (click)="goBack()">
+        &larr; Voltar para Opções de Refeições
+      </button>
+    </div>
+
+    <div class="form-card">
+      <form [formGroup]="mealForm" (ngSubmit)="onSubmit()">
+        <!-- Linha 1: Nome e Tipo -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Nome da Opção</label>
+            <input id="name" type="text" formControlName="name" placeholder="Ex: Ovos com Fruta">
+          </div>
+          <div class="form-group">
+            <label for="type">Tipo de Refeição</label>
+            <select id="type" formControlName="type">
+              <option value="" disabled>Selecione o tipo</option>
+              <option *ngFor="let type of mealTypes" [value]="type">{{ type }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Seção de Itens Dinâmicos -->
+        <div class="items-section">
+          <h3 class="items-title">Itens da Refeição</h3>
+          <div formArrayName="items">
+            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="item-row">
+              <div class="form-group item-quantity">
+                <label for="quantity-{{i}}">Quantidade</label>
+                <input id="quantity-{{i}}" type="text" formControlName="quantity" placeholder="Ex: 2 fatias">
+              </div>
+              <div class="form-group item-description">
+                <label for="description-{{i}}">Descrição</label>
+                <input id="description-{{i}}" type="text" formControlName="description" placeholder="Ex: Pão integral">
+              </div>
+              <div class="item-actions">
+                <button type="button" class="btn-icon btn-delete" title="Remover Item" (click)="removeItem(i)" [disabled]="items.length <= 1">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn-secondary btn-add-item" (click)="addItem()">
+            <span class="btn-icon">➕</span>
+            Adicionar outro item
+          </button>
+        </div>
+
+        <!-- Ações do Formulário -->
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="goBack()">Cancelar</button>
+          <button type="submit" class="btn-primary" [disabled]="mealForm.invalid">
+            {{ isEditMode ? 'Salvar Alterações' : 'Salvar Opção' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-dashboard-layout>

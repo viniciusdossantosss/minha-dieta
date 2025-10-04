@@ -7,9 +7,9 @@
   </app-side-menu>
 
   <!-- Main Content Area -->
-  <div class="main-content" [class.menu-open]="isSideMenuOpen">
-    <!-- Mobile Header with Menu Button -->
-    <div class="mobile-header">
+  <div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
       <button class="menu-toggle" (click)="toggleSideMenu()">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
@@ -18,9 +18,9 @@
       <h1 class="page-title">{{ pageTitle }}</h1>
     </div>
 
-    <!-- Content -->
-    <div class="content-area">
+    <!-- Content Projection -->
+    <main class="content-area">
       <ng-content></ng-content>
-    </div>
+    </main>
   </div>
 </div>

@@ -1,1 +1,83 @@
-<p>patients works!</p>
+<app-dashboard-layout [userProfile]="userProfile" pageTitle="Meus Pacientes">
+  <div class="patients-container">
+    <!-- Cabeçalho da Página -->
+    <div class="page-header">
+      <h1 class="page-title">Gerenciamento de Pacientes</h1>
+      <button class="btn-primary" (click)="addNewPatient()">
+        <span class="btn-icon">➕</span>
+        Adicionar Novo Paciente
+      </button>
+    </div>
+
+    <!-- Barra de Ferramentas: Busca e Filtros -->
+    <div class="toolbar">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          placeholder="Buscar por nome ou email..."
+          [(ngModel)]="searchTerm"
+          (input)="filterPatients()"
+        >
+        <span class="search-icon">🔍</span>
+      </div>
+      <!-- Futuramente, adicionar mais filtros aqui (ex: por status) -->
+    </div>
+
+    <!-- Tabela de Pacientes -->
+    <div class="table-container">
+      <table class="patients-table">
+        <thead>
+          <tr>
+            <th>Nome do Paciente</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Última Atualização</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="filteredPatients.length === 0">
+            <td colspan="1" class="no-results">Nenhum paciente encontrado.</td>
+          </tr>
+          <tr *ngFor="let patient of filteredPatients">
+            <td>
+              <div class="patient-card-content">
+                <div class="patient-avatar">
+                  <img 
+                    [src]="patient.avatar || '/assets/default-avatar.png'" 
+                    alt="{{ patient.name }}" 
+                    onerror="this.src='/assets/default-avatar.png'"
+                  >
+                </div>
+                <div class="patient-info">
+                  <div class="patient-name">{{ patient.name }}</div>
+                  <div class="patient-details">
+                    <span>{{ patient.email }}</span>
+                    <span>&nbsp;&bull;&nbsp;</span>
+                    <span>
+                      Status:
+                      <span class="status-badge" [class]="patient.status">
+                        {{ getStatusText(patient.status) }}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div class="action-buttons">
+                  <button class="btn-icon" title="Ver Detalhes" (click)="viewPatient(patient.id)">
+                    👁️
+                  </button>
+                  <button class="btn-icon" title="Editar" (click)="editPatient(patient.id)">
+                    ✏️
+                  </button>
+                  <button class="btn-icon btn-delete" title="Excluir" (click)="deletePatient(patient.id)">
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</app-dashboard-layout>

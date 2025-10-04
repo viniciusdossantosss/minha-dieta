@@ -1,1 +1,82 @@
-<p>patient-detail works!</p>
+<app-dashboard-layout [userProfile]="userProfile" pageTitle="Detalhes do Paciente">
+  <div class="detail-container">
+    <ng-container *ngIf="data$ | async as data; else loadingOrNotFound">
+      <!-- Botão de Voltar -->
+      <div class="page-header">
+        <button class="btn-back" (click)="goBack()">
+          &larr; Voltar para a lista
+        </button>
+      </div>
+
+      <!-- Card de Detalhes do Paciente -->
+      <div class="patient-card-detail">
+        <!-- Cabeçalho do Card -->
+        <div class="card-header">
+          <div class="patient-identity">
+            <img 
+              [src]="data.patient.avatar || '/assets/default-avatar.png'" 
+              [alt]="data.patient.name" 
+              class="patient-avatar-large"
+              onerror="this.src='/assets/default-avatar.png'"
+            >
+            <div class="patient-name-status">
+              <h1 class="patient-name">{{ data.patient.name }}</h1>
+              <span class="status-badge" [class]="data.patient.status">
+                {{ getStatusText(data.patient.status) }}
+              </span>
+            </div>
+          </div>
+          <button class="btn-primary" (click)="editPatient(data.patient.id)">Editar Paciente</button>
+        </div>
+
+        <!-- Corpo do Card com Informações -->
+        <div class="card-body">
+          <h2 class="section-title">Informações Pessoais</h2>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Email</label>
+              <p>{{ data.patient.email }}</p>
+            </div>
+            <div class="info-item">
+              <label>Idade</label>
+              <p>{{ data.patient.age }} anos</p>
+            </div>
+            <div class="info-item">
+              <label>Telefone</label>
+              <p>{{ data.patient.phone || 'Não informado' }}</p>
+            </div>
+            <div class="info-item">
+              <label>Membro desde</label>
+              <p>{{ data.patient.lastUpdate | date: 'dd/MM/yyyy' }}</p>
+            </div>
+          </div>
+
+          <h2 class="section-title">Objetivo Principal</h2>
+          <div class="goal-section">
+            <p>{{ data.patient.goal || 'Nenhum objetivo definido.' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção do Plano Alimentar -->
+      <div class="diet-plan-section">
+        <h2 class="section-title">Plano Alimentar da Semana</h2>
+        <app-calendar-week
+          [startDate]="startDate"
+          [dietPlan]="data.dietPlan"
+          [mealOptions]="data.mealOptions"
+          (slotClick)="onSlotClicked($event)"
+        ></app-calendar-week>
+      </div>
+
+    </ng-container>
+
+    <!-- Template para Loading ou Paciente Não Encontrado -->
+    <ng-template #loadingOrNotFound>
+      <div class="centered-message">
+        <p>Carregando dados do paciente...</p>
+      </div>
+    </ng-template>
+  </div>
+  <app-meal-selection-modal #mealModal (mealSelected)="onMealSelected($event)"></app-meal-selection-modal>
+</app-dashboard-layout>

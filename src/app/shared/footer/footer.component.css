@@ -1,7 +1,7 @@
 /* Mobile First - Base styles */
 .global-footer {
-  background: #2c3e50;
-  color: white;
+  background: var(--card-background); /* Usando variável */
+  color: var(--text-color); /* Usando variável */
   margin-top: auto;
 }
 
@@ -27,8 +27,8 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  color: #7A9B5C;
-  font-weight: 700;
+  color: var(--text-color); /* Usando variável */
+  font-weight: bold;
   font-size: 1.3rem;
 }
 
@@ -38,11 +38,12 @@
 }
 
 .footer-description {
-  color: #bdc3c7;
+  color: var(--secondary-text); /* Usando variável */
   line-height: 1.6;
   max-width: 300px;
   margin: 0 auto;
-  font-size: 0.9rem;
+  font-size: 14px;
+  font-weight: normal;
 }
 
 /* Footer Sections */
@@ -51,7 +52,7 @@
 }
 
 .footer-title {
-  color: #7A9B5C;
+  color: var(--text-color); /* Usando variável */
   font-size: 1.1rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -68,14 +69,15 @@
 }
 
 .footer-link {
-  color: #bdc3c7;
+  color: var(--secondary-text); /* Usando variável */
   text-decoration: none;
   transition: color 0.3s ease;
-  font-size: 0.9rem;
+  font-size: 14px;
+  font-weight: normal;
 }
 
 .footer-link:hover {
-  color: #7A9B5C;
+  color: var(--primary-color); /* Usando variável */
 }
 
 /* Contact Items */
@@ -91,13 +93,14 @@
 }
 
 .contact-text {
-  color: #bdc3c7;
-  font-size: 0.9rem;
+  color: var(--secondary-text); /* Usando variável */
+  font-size: 14px;
+  font-weight: normal;
 }
 
 /* Footer Bottom */
 .footer-bottom {
-  border-top: 1px solid #34495e;
+  border-top: 1px solid var(--border-color); /* Usando variável */
   padding: 1.5rem 1rem;
 }
 
@@ -110,14 +113,16 @@
 }
 
 .copyright {
-  color: #95a5a6;
-  font-size: 0.8rem;
+  color: var(--secondary-text); /* Usando variável */
+  font-size: 14px;
+  font-weight: normal;
   margin: 0;
 }
 
 .social-text {
-  color: #95a5a6;
-  font-size: 0.8rem;
+  color: var(--secondary-text); /* Usando variável */
+  font-size: 14px;
+  font-weight: normal;
 }
 
 /* Tablet styles - 768px and up */

@@ -1,0 +1,146 @@
+/* Container principal */
+.patients-container {
+  padding: 1.5rem;
+}
+
+/* Cabeçalho da página */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.5rem; /* 24px */
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* Barra de ferramentas e busca */
+.toolbar {
+  margin-bottom: 1.5rem;
+}
+
+.search-bar input {
+  width: 100%;
+  max-width: 450px;
+  padding: 0.8rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+}
+
+/* Tabela com estilo de card */
+.table-container {
+  overflow: visible;
+}
+
+.patients-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 1rem; /* Espaçamento vertical entre as linhas/cards */
+}
+
+/* Esconde o cabeçalho da tabela, pois cada card terá seus "labels" implícitos */
+.patients-table thead {
+  display: none;
+}
+
+/* A linha da tabela se torna o card */
+.patients-table tr {
+  display: block;
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.patients-table tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* As células da tabela são os elementos dentro do card */
+.patients-table td {
+  padding: 0;
+  border: none;
+  display: block; /* Empilha as células verticalmente por padrão */
+}
+
+/* Usamos um wrapper dentro da primeira célula para aplicar o layout flex */
+.patient-card-content {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+}
+
+.patient-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.patient-info {
+  flex-grow: 1;
+}
+
+.patient-name {
+  font-weight: 600; /* Semi-bold */
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.patient-details {
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.patient-details .status-badge {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+}
+
+.status-badge.active {
+    background-color: #e0f8e9;
+    color: #1d9a4d;
+}
+
+.status-badge.inactive {
+    background-color: #fde0e0;
+    color: #d92d2d;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--secondary-text);
+  padding: 0.5rem;
+}
+
+.btn-icon:hover {
+  color: var(--primary-color);
+}
+
+.btn-delete:hover {
+    color: #d92d2d;
+}
+
+/* Mensagem de sem resultados */
+.no-results td {
+    text-align: center;
+    padding: 3rem;
+    color: var(--secondary-text);
+}

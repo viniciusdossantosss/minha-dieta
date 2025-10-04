@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) {
     // Inicializar o formulário
     this.loginForm = this.formBuilder.group({
@@ -73,27 +75,18 @@ export class LoginComponent implements OnInit {
       this.isLoading = true;
       this.loginError = '';
 
+      // Usar o AuthService para fazer o login
+      // Por enquanto, a validação de email/senha é simulada.
+      // A lógica real de API viria aqui antes de chamar o serviço.
       const { email, password } = this.loginForm.value;
 
-      // Simular chamada de API
-      setTimeout(() => {
-        // Aqui você fará a chamada real para seu backend
-        console.log('Login attempt:', { email, password, userType: this.userType });
-        
-        // Por enquanto, vamos simular um login bem-sucedido
-        if (email && password) {
-          // Redirecionar baseado no tipo de usuário
-          if (this.userType === 'nutritionist') {
-            this.router.navigate(['/nutritionist/dashboard']);
-          } else {
-            this.router.navigate(['/patient/dashboard']);
-          }
-        } else {
-          this.loginError = 'Email ou senha inválidos';
-        }
-        
+      if (email && password) {
+        this.authService.login(this.userType);
+      } else {
+        // Simulação de erro
+        this.loginError = 'Email ou senha inválidos';
         this.isLoading = false;
-      }, 1500);
+      }
     } else {
       // Marcar todos os campos como touched para mostrar erros
       Object.keys(this.loginForm.controls).forEach(key => {

@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
+import { Patient } from '../../models/patient.model';
+import { PatientService } from '../../services/patient.service';
 
 interface UserProfile {
+  id: number; // ID do nutricionista
   name: string;
   type: 'nutritionist' | 'patient';
   avatar?: string;
@@ -16,15 +19,6 @@ interface Stats {
   weeklyActivity: number;
 }
 
-interface Patient {
-  id: number;
-  name: string;
-  age: number;
-  avatar?: string;
-  status: 'active' | 'inactive';
-  lastUpdate: Date;
-}
-
 @Component({
   selector: 'app-nutritionist-dashboard',
   standalone: true,
@@ -33,7 +27,9 @@ interface Patient {
   styleUrls: ['./nutritionist-dashboard.component.css']
 })
 export class NutritionistDashboardComponent implements OnInit {
+  // Simula um perfil de nutricionista logado
   userProfile: UserProfile = {
+    id: 1, 
     name: 'Juliana Sobral',
     type: 'nutritionist',
     avatar: '/assets/default-avatar.png',
@@ -41,85 +37,45 @@ export class NutritionistDashboardComponent implements OnInit {
   };
 
   stats: Stats = {
-    totalPatients: 12,
+    totalPatients: 0, // Será atualizado dinamicamente
     totalMenus: 28,
     weeklyActivity: 85
   };
 
-  recentPatients: Patient[] = [
-    {
-      id: 1,
-      name: 'Maria Silva',
-      age: 32,
-      status: 'active',
-      lastUpdate: new Date()
-    },
-    {
-      id: 2,
-      name: 'João Santos',
-      age: 28,
-      status: 'active',
-      lastUpdate: new Date()
-    },
-    {
-      id: 3,
-      name: 'Ana Costa',
-      age: 45,
-      status: 'inactive',
-      lastUpdate: new Date()
-    },
-    {
-      id: 4,
-      name: 'Pedro Lima',
-      age: 35,
-      status: 'active',
-      lastUpdate: new Date()
-    }
-  ];
+  recentPatients: Patient[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private patientService: PatientService) {}
 
   ngOnInit(): void {
-    // Aqui você pode carregar dados reais do backend
     this.loadDashboardData();
   }
 
   loadDashboardData(): void {
-    // Simular carregamento de dados
-    // Em um app real, você faria chamadas HTTP aqui
-    console.log('Loading dashboard data...');
+    // Carrega apenas os pacientes do nutricionista logado
+    this.patientService.getPatients(this.userProfile.id).subscribe(patients => {
+      // Pega os 4 pacientes mais recentes baseados na data de atualização
+      this.recentPatients = [...patients]
+        .sort((a, b) => b.lastUpdate.getTime() - a.lastUpdate.getTime())
+        .slice(0, 4);
+      
+      this.stats.totalPatients = patients.length;
+    });
   }
 
   addNewPatient(): void {
-    console.log('Add new patient clicked');
-    // Navegar para página de adicionar paciente
-    // this.router.navigate(['/nutritionist/patients/add']);
-    alert('Funcionalidade "Adicionar Paciente" será implementada em breve!');
+    this.router.navigate(['/nutritionist/patients/add']);
   }
 
   createMenu(): void {
-    console.log('Create menu clicked');
-    // Navegar para página de criar cardápio
-    // this.router.navigate(['/nutritionist/meal-options/create']);
-    alert('Funcionalidade "Criar Cardápio" será implementada em breve!');
-  }
-
-  viewReports(): void {
-    console.log('View reports clicked');
-    // Navegar para página de relatórios
-    // this.router.navigate(['/nutritionist/reports']);
-    alert('Funcionalidade "Relatórios" será implementada em breve!');
+    this.router.navigate(['/nutritionist/meal-options/add']);
   }
 
   viewPatient(patientId: number): void {
-    console.log('View patient:', patientId);
     // Navegar para detalhes do paciente
-    // this.router.navigate(['/nutritionist/patients', patientId]);
-    alert(`Ver detalhes do paciente ${patientId}`);
+    this.router.navigate(['/nutritionist/patients', patientId]);
   }
 
   editMenu(patientId: number): void {
-    console.log('Edit menu for patient:', patientId);
     // Navegar para editar cardápio do paciente
     // this.router.navigate(['/nutritionist/patients', patientId, 'menu']);
     alert(`Editar cardápio do paciente ${patientId}`);

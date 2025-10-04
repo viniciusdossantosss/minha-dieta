@@ -1,7 +1,4 @@
-<app-dashboard-layout 
-  pageTitle="Minha Dieta"
-  [userProfile]="userProfile">
-  
+<app-dashboard-layout [userProfile]="userProfile" pageTitle="Minha Dieta">
   <!-- Welcome Section -->
   <div class="welcome-section">
     <h1 class="welcome-title">Olá, {{ userProfile.name }}! 🍽️</h1>
@@ -11,59 +8,30 @@
   <!-- Today's Meals Highlight -->
   <div class="today-section">
     <h2 class="section-title">Refeições de Hoje - {{ getTodayDate() }}</h2>
-    <div class="today-meals">
+    <div class="today-meals" *ngIf="todayMeals$ | async as todayMeals">
       <div class="meal-card today" *ngFor="let meal of todayMeals">
         <div class="meal-header">
           <span class="meal-icon">{{ meal.icon }}</span>
-          <h3 class="meal-name">{{ meal.name }}</h3>
-          <span class="meal-status" [class]="meal.status">
-            {{ getStatusText(meal.status) }}
-          </span>
+          <h3 class="meal-name">{{ meal.mealType }}</h3>
         </div>
         <div class="meal-content">
-          <div class="selected-option" *ngIf="meal.selectedOption">
-            <h4>{{ meal.selectedOption.name }}</h4>
+          <div class="selected-option" *ngIf="meal.assignedOption; else noSelection">
+            <h4>{{ meal.assignedOption.name }}</h4>
             <ul class="ingredients-list">
-              <li *ngFor="let ingredient of meal.selectedOption.ingredients">{{ ingredient }}</li>
+              <li *ngFor="let item of meal.assignedOption.items">{{ item.quantity }} - {{ item.description }}</li>
             </ul>
-            <button class="btn-select change-btn" (click)="selectMealOption(meal.id, 'today')">
+            <button class="btn-select change-btn" (click)="openMealSelector(this.currentWeekStart, meal.mealType)">
               Alterar
             </button>
           </div>
-          <div class="no-selection" *ngIf="!meal.selectedOption">
-            <p>Nenhuma opção selecionada</p>
-            <button class="btn-select" (click)="selectMealOption(meal.id, 'today')">
-              Escolher Refeição
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Weekly Progress -->
-  <div class="progress-section">
-    <h2 class="section-title">Progresso da Semana</h2>
-    <div class="progress-stats">
-      <div class="progress-card">
-        <div class="progress-icon">✅</div>
-        <div class="progress-content">
-          <h3>{{ weeklyProgress.completed }}</h3>
-          <p>Refeições Escolhidas</p>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="progress-icon">⏳</div>
-        <div class="progress-content">
-          <h3>{{ weeklyProgress.pending }}</h3>
-          <p>Pendentes</p>
-        </div>
-      </div>
-      <div class="progress-card">
-        <div class="progress-icon">📊</div>
-        <div class="progress-content">
-          <h3>{{ weeklyProgress.percentage }}%</h3>
-          <p>Adesão</p>
+          <ng-template #noSelection>
+            <div class="no-selection">
+              <p>Nenhuma opção selecionada</p>
+              <button class="btn-select" (click)="openMealSelector(this.currentWeekStart, meal.mealType)">
+                Escolher Refeição
+              </button>
+            </div>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -72,43 +40,34 @@
   <!-- Weekly Planner -->
   <div class="weekly-planner-section">
     <h2 class="section-title">Planejador Semanal</h2>
-    
-    <!-- Week Navigation -->
     <div class="week-navigation">
       <button class="week-nav-btn" (click)="previousWeek()">‹</button>
       <span class="week-display">{{ getCurrentWeekDisplay() }}</span>
       <button class="week-nav-btn" (click)="nextWeek()">›</button>
     </div>
 
-    <!-- Days Grid -->
-    <div class="days-grid">
+    <div class="days-grid" *ngIf="weekData$ | async as weekDays">
       <div class="day-column" *ngFor="let day of weekDays">
         <div class="day-header">
-          <h3 class="day-name">{{ day.name }}</h3>
-          <span class="day-date">{{ day.date }}</span>
+          <h3 class="day-name">{{ day.dayName }}</h3>
+          <span class="day-date">{{ day.dayNumber }}</span>
         </div>
-        
         <div class="day-meals">
-          <div class="meal-slot" *ngFor="let meal of day.meals">
+          <div class="meal-slot" *ngFor="let slot of day.slots">
             <div class="meal-slot-header">
-              <span class="meal-icon">{{ meal.icon }}</span>
-              <span class="meal-name">{{ meal.name }}</span>
+              <span class="meal-icon">{{ slot.icon }}</span>
+              <span class="meal-name">{{ slot.mealType }}</span>
             </div>
-            
-            <div class="meal-selection" *ngIf="meal.selectedOption" 
-                 (click)="selectMealOption(meal.id, day.id)">
-              <div class="selected-meal">
-                <h4>{{ meal.selectedOption.name }}</h4>
-                <p class="meal-description">{{ meal.selectedOption.description }}</p>
+            <div class="meal-selection" [class.empty]="!slot.assignedOption" (click)="openMealSelector(day.date, slot.mealType)">
+              <div *ngIf="slot.assignedOption; else emptyMeal" class="selected-meal">
+                <h4>{{ slot.assignedOption.name }}</h4>
               </div>
-            </div>
-            
-            <div class="meal-selection empty" *ngIf="!meal.selectedOption"
-                 (click)="selectMealOption(meal.id, day.id)">
-              <div class="empty-meal">
-                <span class="plus-icon">+</span>
-                <p>Escolher</p>
-              </div>
+              <ng-template #emptyMeal>
+                <div class="empty-meal">
+                  <span class="plus-icon">+</span>
+                  <p>Escolher</p>
+                </div>
+              </ng-template>
             </div>
           </div>
         </div>
@@ -116,43 +75,5 @@
     </div>
   </div>
 
-  <!-- Quick Actions -->
-  <div class="quick-actions-section">
-    <h2 class="section-title">Ações Rápidas</h2>
-    <div class="actions-grid">
-      <button class="action-card" (click)="viewNutritionistContact()">
-        <div class="action-icon">👩‍⚕️</div>
-        <div class="action-content">
-          <h3>Contatar Nutricionista</h3>
-          <p>Tirar dúvidas sobre o cardápio</p>
-        </div>
-      </button>
-
-      <button class="action-card" (click)="viewMealHistory()">
-        <div class="action-icon">📋</div>
-        <div class="action-content">
-          <h3>Histórico</h3>
-          <p>Ver refeições anteriores</p>
-        </div>
-      </button>
-
-      <button class="action-card" (click)="viewProgress()">
-        <div class="action-icon">📈</div>
-        <div class="action-content">
-          <h3>Meu Progresso</h3>
-          <p>Acompanhar evolução</p>
-        </div>
-      </button>
-    </div>
-  </div>
-
-  <!-- AQUI: Componente da Modal de Seleção de Refeições -->
-  <app-meal-selection-modal 
-  [isOpen]="isMealModalOpen" 
-  [mealData]="currentMealData" 
-  [availableOptions]="availableMealOptionsForModal"
-    (mealSelected)="onMealSelected($event)"
-    (close)="closeMealModal()">
-  </app-meal-selection-modal>
-
+  <app-meal-selection-modal #mealModal (mealSelected)="onMealSelected($event)"></app-meal-selection-modal>
 </app-dashboard-layout>

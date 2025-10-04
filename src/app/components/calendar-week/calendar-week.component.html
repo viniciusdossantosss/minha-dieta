@@ -1,1 +1,22 @@
-<p>calendar-week works!</p>
+<div class="calendar-container">
+  <div class="calendar-grid">
+    <!-- Cabeçalho dos Dias -->
+    <div class="header-cell"></div>
+    <div *ngFor="let day of weekDays" class="header-cell day-header">
+      {{ day | date: 'EEE':'':'pt-BR' }} <span class="date-number">{{ day | date: 'd' }}</span>
+    </div>
+
+    <!-- Linhas de Refeição -->
+    <ng-container *ngFor="let type of mealTypes">
+      <div class="header-cell meal-type-header">{{ type }}</div>
+      <div *ngFor="let day of weekDays" class="meal-slot" (click)="onSlotClick(day, type)">
+        <div *ngIf="getAssignedMeal(day, type) as meal; else emptySlot" class="assigned-meal">
+          <span class="meal-name">{{ meal.name }}</span>
+        </div>
+        <ng-template #emptySlot>
+          <div class="empty-slot-icon">➕</div>
+        </ng-template>
+      </div>
+    </ng-container>
+  </div>
+</div>

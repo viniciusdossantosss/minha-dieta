@@ -1,95 +1,72 @@
-/* Mobile First - Base styles */
-.dashboard-layout {
+:host {
+  display: block;
+  background-color: var(--body-background);
   min-height: 100vh;
-  background: #f8f9fa;
 }
 
 .main-content {
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease-in-out;
 }
 
-/* Mobile Header */
-.mobile-header {
+.top-bar {
+  height: 60px;
+  background-color: var(--card-background);
   display: flex;
   align-items: center;
-  padding: 1rem;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0 1rem;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 999;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .menu-toggle {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
-  gap: 4px;
+  padding: 0.5rem;
   margin-right: 1rem;
 }
 
 .hamburger-line {
-  width: 100%;
+  width: 24px;
   height: 3px;
-  background: #7A9B5C;
+  background-color: var(--text-color);
+  display: block;
+  margin: 4px 0;
   border-radius: 2px;
-  transition: all 0.3s ease;
 }
 
 .page-title {
-  margin: 0;
-  font-size: 1.3rem;
-  color: #333;
-  font-weight: 600;
+  font-size: 1.25rem; /* 20px */
+  font-weight: bold;
+  color: var(--text-color);
 }
 
-/* Content Area */
 .content-area {
-  padding: 1rem;
+  padding: 1.5rem; /* 24px */
 }
 
-/* Tablet styles - 768px and up */
+/* --- Responsividade --- */
+
+/* Tablet e Desktop: Menu lateral fica fixo */
 @media (min-width: 768px) {
   .main-content {
-    margin-left: 280px; /* Espaço para o side menu fixo */
+    margin-left: 300px; /* Largura do menu lateral */
   }
-  
-  .mobile-header {
-    display: none; /* Esconder header mobile */
+
+  .top-bar {
+    padding: 0 2rem;
   }
-  
+
   .content-area {
     padding: 2rem;
   }
 }
 
-/* Desktop styles - 1024px and up */
+/* Em telas grandes, o botão de menu pode ser escondido se o menu for sempre visível */
 @media (min-width: 1024px) {
-  .main-content {
-    margin-left: 300px; /* Espaço maior para o side menu */
-  }
-  
-  .content-area {
-    padding: 2.5rem;
-  }
-}
-
-
-/* Animations for menu toggle */
-.menu-toggle:hover .hamburger-line {
-  background: #6B8E4E;
-}
-
-/* Content shift when menu is open on mobile */
-@media (max-width: 767px) {
-  .main-content.menu-open {
-    transform: translateX(280px);
+  .menu-toggle {
+    /* display: none; */ /* Opção: descomentar se o menu for sempre visível e não puder ser fechado */
   }
 }

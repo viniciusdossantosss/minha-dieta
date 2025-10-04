@@ -6,6 +6,12 @@ import { TermsOfServiceComponent } from './pages/terms-of-service/terms-of-servi
 import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
 import { NutritionistDashboardComponent } from './pages/nutritionist-dashboard/nutritionist-dashboard.component';
 import { PatientDashboardComponent } from './pages/patient-dashboard/patient-dashboard.component';
+import { authGuard } from './guards/auth.guard';
+import { PatientsComponent } from './pages/patients/patients.component';
+import { PatientDetailComponent } from './pages/patient-detail/patient-detail.component';
+import { PatientFormComponent } from './pages/patient-form/patient-form.component';
+import { MealOptionsComponent } from './pages/meal-options/meal-options.component';
+import { MealOptionFormComponent } from './pages/meal-option-form/meal-option-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,7 +19,59 @@ export const routes: Routes = [
   { path: 'register-nutritionist', component: RegisterNutritionistComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
-  { path: 'nutritionist/dashboard', component: NutritionistDashboardComponent },
-  { path: 'patient/dashboard', component: PatientDashboardComponent },
+  {
+    path: 'nutritionist/dashboard',
+    component: NutritionistDashboardComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/patients',
+    component: PatientsComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/patients/add',
+    component: PatientFormComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/patients/:id/edit',
+    component: PatientFormComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/patients/:id',
+    component: PatientDetailComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/meal-options',
+    component: MealOptionsComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/meal-options/add',
+    component: MealOptionFormComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/meal-options/:id/edit',
+    component: MealOptionFormComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'patient/dashboard',
+    component: PatientDashboardComponent,
+    canActivate: [authGuard],
+    data: { userType: 'patient' },
+  },
   { path: 'home', redirectTo: '', pathMatch: 'full' },
 ];
