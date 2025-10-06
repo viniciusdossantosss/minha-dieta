@@ -1,20 +1,24 @@
 <div class="home-container">
   <!-- Hero Section Simplificada -->
   <section class="hero-section">
+    <video #bgVideo autoplay loop muted playsinline class="hero-video">
+      <source src="Background-video.mp4" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
     <div class="hero-content">
-      <h1 class="hero-title">Comece Agora</h1>
+      <h1 class="hero-title">Gerencie Sua Nutrição com Facilidade</h1>
       <p class="hero-subtitle">
-        Escolha como você quer acessar a plataforma
+        Acesse a plataforma e descubra o caminho para uma alimentação personalizada e eficiente
       </p>
       
       <div class="access-buttons">
         <button class="btn-primary" (click)="navigateToLogin('nutritionist')">
-          <span class="btn-icon">👩‍⚕️</span>
+          <span class="btn-icon"><img class="icon-svg" src="icons/Nutritionist-white.svg"></span>
           Sou Nutricionista
         </button>
         
         <button class="btn-secondary" (click)="navigateToLogin('patient')">
-          <span class="btn-icon">👤</span>
+          <span class="btn-icon"><img class="icon-svg" src="icons/Patient-white.svg"></span>
           Sou Paciente
         </button>
       </div>
@@ -26,21 +30,15 @@
     
     <div class="features-grid">
       <div class="feature-card">
-        <div class="feature-icon">📋</div>
+        <div class="feature-icon"><img class="icon-svg" src="icons/Clipboard-green.svg"></div>
         <h3>Para Nutricionistas</h3>
         <p>Cadastre pacientes, crie opções de refeições personalizadas e acompanhe o progresso de cada um.</p>
       </div>
       
       <div class="feature-card">
-        <div class="feature-icon">🍽️</div>
+        <div class="feature-icon"><img class="icon-svg" src="icons/Meal-green.svg"></div>
         <h3>Para Pacientes</h3>
         <p>Acesse seu cardápio personalizado e escolha suas refeições diárias de forma prática.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <h3>Acompanhamento</h3>
-        <p>Monitore o progresso e mantenha uma comunicação eficiente entre nutricionista e paciente.</p>
       </div>
     </div>
   </section>
@@ -48,7 +46,7 @@
 
   <!-- CTA Section -->
   <section class="cta-section">
-    <h2>Pronto para começar?</h2>
+    <h2 class="section-title">Pronto para começar?</h2>
     <p>Cadastre-se como nutricionista e comece a gerenciar seus pacientes hoje mesmo!</p>
     <button class="btn-cta" (click)="navigateToRegister()">
       Cadastrar como Nutricionista

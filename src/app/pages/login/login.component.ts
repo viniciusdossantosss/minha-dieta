@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Location, CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -71,27 +71,33 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.isLoading = true;
-      this.loginError = '';
+  if (this.loginForm.valid) {
+    this.isLoading = true;
+    this.loginError = '';
 
-      // Usar o AuthService para fazer o login
-      // Por enquanto, a validação de email/senha é simulada.
-      // A lógica real de API viria aqui antes de chamar o serviço.
-      const { email, password } = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
 
-      if (email && password) {
-        this.authService.login(this.userType);
-      } else {
-        // Simulação de erro
-        this.loginError = 'Email ou senha inválidos';
+    this.authService.login(email, password).subscribe({
+      next: (response) => {
         this.isLoading = false;
+        // O redirecionamento é feito automaticamente no AuthService
+      },
+      error: (error) => {
+        this.isLoading = false;
+        if (error.status === 401) {
+          this.loginError = 'Email ou senha inválidos';
+        } else if (error.status === 0) {
+          this.loginError = 'Erro de conexão. Verifique se o servidor está rodando.';
+        } else {
+          this.loginError = 'Erro interno do servidor. Tente novamente.';
+        }
       }
-    } else {
-      // Marcar todos os campos como touched para mostrar erros
-      Object.keys(this.loginForm.controls).forEach(key => {
-        this.loginForm.get(key)?.markAsTouched();
-      });
-    }
+    });
+  } else {
+    // Marcar todos os campos como touched para mostrar erros
+    Object.keys(this.loginForm.controls).forEach(key => {
+      this.loginForm.get(key)?.markAsTouched();
+    });
   }
+}
 }

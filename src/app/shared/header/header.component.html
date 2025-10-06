@@ -2,7 +2,7 @@
   <div class="header-container">
     <!-- Logo/Brand -->
     <div class="brand" (click)="goHome()">
-      <span class="logo-icon">🥗</span>
+      <span class="logo-icon"><img class="icon-svg" src="icons/Logo.svg"></span>
       <span class="brand-name">Minha Dieta</span>
     </div>
 
@@ -14,37 +14,38 @@
     </nav>
 
     <!-- Mobile Menu Button -->
-    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" [class.active]="isMobileMenuOpen">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
+    <button class="mobile-menu-btn" (click)="toggleMobileMenu()" *ngIf="!isMobileMenuOpen">
+      <img src="icons/Menu-hamburger-green.svg" alt="Abrir Menu">
     </button>
   </div>
 
   <!-- Mobile Navigation -->
   <nav class="mobile-nav" [class.open]="isMobileMenuOpen">
+    <div class="mobile-nav-header">
+      <button class="mobile-nav-close-btn" (click)="closeMobileMenu()">
+        <img src="icons/Close-white.svg" alt="Fechar Menu">
+      </button>
+    </div>
     <a href="/" class="mobile-nav-link" (click)="closeMobileMenu()">
-      <span class="mobile-icon">🏠</span>
+      <span class="mobile-icon">
+        <img src="icons/Home-white.svg" class="icon-default">
+        <img src="icons/Home-green.svg" class="icon-hover">
+      </span>
       Home
     </a>
     <a href="/login" class="mobile-nav-link" (click)="closeMobileMenu()">
-      <span class="mobile-icon">🔐</span>
+      <span class="mobile-icon">
+        <img src="icons/Padlock-white.svg" class="icon-default">
+        <img src="icons/Padlock-green.svg" class="icon-hover">
+      </span>
       Login
     </a>
     <a href="/register-nutritionist" class="mobile-nav-link" (click)="closeMobileMenu()">
-      <span class="mobile-icon">📝</span>
+      <span class="mobile-icon">
+        <img src="icons/Register-white.svg" class="icon-default">
+        <img src="icons/Register-green.svg" class="icon-hover">
+      </span>
       Cadastro Nutricionista
-    </a>
-    
-    <div class="mobile-nav-divider"></div>
-    
-    <a href="/terms-of-service" class="mobile-nav-link secondary" (click)="closeMobileMenu()">
-      <span class="mobile-icon">📋</span>
-      Termos de Uso
-    </a>
-    <a href="/privacy-policy" class="mobile-nav-link secondary" (click)="closeMobileMenu()">
-      <span class="mobile-icon">🔒</span>
-      Política de Privacidade
     </a>
   </nav>
 

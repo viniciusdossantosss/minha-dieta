@@ -4,15 +4,18 @@
 :root {
   --primary-color: #7B8455;
   --primary-color-light: #9DA47C; /* Tom mais claro para hover/realce */
-  --secondary-text: #6E6E6E;
+  --secondary-text: #444444;
   --card-background: #FFFFFF;
   --body-background: #F9FAFB; /* Um cinza muito claro para contraste */
   --border-color: #EDEDED;
-  --text-color: #000000;
+  --text-color: #313720;
   --text-color-light: #FFFFFF;
   --disabled-bg: #EDEDED;
   --disabled-text: #A0A0A0;
-
+  --font-size-p: clamp(1rem, 0.5vw + 0.8rem, 1.2rem);
+  --font-size-h1: clamp(1.8rem, 2vw + 1rem, 3rem);
+  --font-size-h2: clamp(1.4rem, 1.5vw + 0.8rem, 2.2rem);
+  --font-size-h3: clamp(1.2rem, 1vw + 0.6rem, 1.6rem);
   --font-family: 'Roboto', 'Inter', 'Open Sans', sans-serif;
   --border-radius: 8px;
 }
@@ -78,4 +81,74 @@ a {
   background-color: var(--card-background);
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
+}
+
+/* 5. Estilos Globais de Formulário */
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--body-background);
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(123, 132, 85, 0.15);
+}
+
+.form-control.is-invalid {
+  border-color: #e53e3e;
+}
+
+.form-control.is-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.15);
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  min-height: 1.25rem; /* Evita que o layout pule */
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--secondary-text);
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

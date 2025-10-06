@@ -1,116 +1,53 @@
-/* Mobile First - Base styles */
+/* Estilos específicos para o container e card de registro */
 .register-container {
   min-height: 100vh;
-  background: var(--body-background); /* Fundo da página conforme design system */
-  padding: 0;
-  display: flex; /* Adicionado para centralizar o conteúdo */
-  justify-content: center; /* Adicionado para centralizar o conteúdo */
-  align-items: center; /* Adicionado para centralizar o conteúdo */
-}
-
-/* Header customizado removido */
-
-/* Content */
-.register-content {
-  padding: 1rem;
+  background: var(--body-background);
+  padding: 2rem 1rem;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  width: 100%; /* Garante que o conteúdo ocupe a largura total */
+  align-items: center;
 }
 
 .register-card {
-  background: var(--card-background); /* Fundo branco conforme design system */
-  border-radius: var(--border-radius); /* 8px conforme design system */
-  padding: 16px; /* 12-16px conforme design system */
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 2.5rem;
   width: 100%;
-  max-width: 500px;
-  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); */ /* Removido */
-  border: 1px solid var(--border-color); /* Borda conforme design system */
-  margin-bottom: 2rem;
+  max-width: 550px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.5s ease-out; /* Adiciona a animação */
 }
 
-/* Header Section */
+/* Seção do Cabeçalho */
 .header-section {
   text-align: center;
   margin-bottom: 2rem;
 }
 
 .icon {
-  font-size: 4rem;
   margin-bottom: 1rem;
-  color: var(--primary-color); /* Ícone com cor primária */
+  color: var(--primary-color);
+}
+
+.icon img {
+  width: 90px;
+  height: 90px;
 }
 
 .header-section h2 {
-  color: var(--text-color); /* Títulos principais preto conforme design system */
-  margin: 0 0 0.5rem 0;
-  font-size: 20px; /* 20px conforme design system */
-  font-weight: bold; /* Bold conforme design system */
+  font-size: var(--font-size-h2);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  color: var(--secondary-text); /* Texto auxiliar cinza conforme design system */
-  margin: 0;
-  font-size: 14px; /* 14px conforme design system */
-  line-height: 1.4;
+  color: var(--secondary-text);
+  font-size: var(--font-size-p);
+  line-height: 1.5;
 }
 
-/* Form Styles */
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  color: var(--text-color); /* Texto principal preto conforme design system */
-  font-weight: 600; /* Semi-bold conforme design system */
-  font-size: 14px; /* 14px conforme design system */
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid var(--border-color); /* Borda conforme design system */
-  border-radius: var(--border-radius); /* 8px conforme design system */
-  font-size: 1rem;
-  transition: border-color 0.3s ease;
-  box-sizing: border-box;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: var(--primary-color); /* Cor primária no foco */
-}
-
-.form-group input.error {
-  border-color: #e74c3c; /* Manter cor de erro */
-}
-
-/* Password Input */
-.password-input {
-  position: relative;
-}
-
-.password-input input {
-  padding-right: 3rem;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
-  padding: 0.25rem;
-  color: var(--secondary-text); /* Cor do ícone */
-}
-
-/* Checkbox Styles */
+/* Estilos para o grupo de checkbox */
 .checkbox-group {
   margin-bottom: 2rem;
 }
@@ -119,50 +56,48 @@
   display: flex;
   align-items: flex-start;
   cursor: pointer;
-  font-size: 14px; /* 14px conforme design system */
-  line-height: 1.4;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--secondary-text);
 }
 
 .checkbox-label input[type="checkbox"] {
-  display: none;
+  display: none; /* Esconde o checkbox padrão */
 }
 
 .checkmark {
   width: 20px;
   height: 20px;
-  border: 1px solid var(--border-color); /* Borda conforme design system */
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   margin-right: 0.75rem;
   margin-top: 2px;
   flex-shrink: 0;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {
-  background: var(--primary-color); /* Cor primária no checked */
-  border-color: var(--primary-color); /* Cor primária no checked */
+  background: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark::after {
   content: '✓';
   position: absolute;
-  color: var(--text-color-light); /* Texto branco */
+  color: var(--text-color-light);
   font-size: 14px;
-  top: -2px;
-  left: 3px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.checkbox-label input[type="checkbox"].error + .checkmark {
-  border-color: #e74c3c; /* Manter cor de erro */
-}
-
-.checkbox-text {
-  color: var(--secondary-text); /* Texto auxiliar cinza conforme design system */
+.checkbox-label input[type="checkbox"].is-invalid + .checkmark {
+  border-color: #e53e3e;
 }
 
 .terms-link {
-  color: var(--primary-color); /* Cor primária */
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 600;
 }
@@ -171,100 +106,72 @@
   text-decoration: underline;
 }
 
-/* Error Messages */
-.error-message {
-  color: #e74c3c; /* Manter cor de erro */
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-}
-
-.general-error {
-  background: #ffeaea; /* Manter cor de erro */
-  color: #e74c3c; /* Manter cor de erro */
-  padding: 0.75rem;
-  border-radius: var(--border-radius); /* 8px conforme design system */
-  margin-top: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-/* Register Button */
+/* Botão de Registro */
 .register-button {
   width: 100%;
-  background: var(--primary-color); /* Cor primária */
-  color: var(--text-color-light); /* Texto branco */
+  background: var(--primary-color);
+  color: var(--text-color-light);
   border: none;
-  padding: 12px 16px; /* Padding conforme design system */
-  border-radius: 6px; /* 6px conforme design system */
-  font-size: 1.1rem;
-  font-weight: bold; /* Bold conforme design system */
+  padding: 0.875rem 1rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 1rem;
 }
 
 .register-button:hover:not(:disabled) {
-  background: var(--primary-color-light); /* Cor primária clara no hover */
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(123, 132, 85, 0.3); /* Sombra com cor primária */
+  background: var(--primary-color-light);
 }
 
 .register-button:disabled {
-  background: var(--disabled-bg); /* Fundo desabilitado */
-  color: var(--disabled-text); /* Texto desabilitado */
+  background: var(--disabled-bg);
+  color: var(--disabled-text);
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
-/* Login Link */
+/* Link para Login */
 .login-link {
   text-align: center;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color); /* Borda conforme design system */
+  border-top: 1px solid var(--border-color);
+  font-size: var(--font-size-p);
 }
 
 .login-link p {
-  color: var(--secondary-text); /* Texto auxiliar cinza */
+  color: var(--secondary-text);
   margin-bottom: 0.5rem;
-  font-size: 14px; /* 14px conforme design system */
 }
 
 .link-button {
   background: none;
   border: none;
-  color: var(--primary-color); /* Cor primária */
+  color: var(--primary-color);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
-  font-size: 1rem;
+  font-size: var(--font-size-p);
 }
 
 .link-button:hover {
-  color: var(--primary-color-light); /* Cor primária clara no hover */
+  color: var(--primary-color-light);
 }
 
-/* Tablet styles - 768px and up */
-@media (min-width: 768px) {
-  .register-content {
-    padding: 2rem;
-  }
-  
-  .register-card {
-    padding: 3rem;
-  }
-  
-  /* Estilos de título removidos */
-  
-  .header-section h2 {
-    font-size: 2rem;
-  }
+/* Erro Geral */
+.general-error {
+  background: #fff5f5;
+  color: #c53030;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
 }
 
-/* Desktop styles - 1024px and up */
-@media (min-width: 1024px) {
-  .register-content {
-    padding: 3rem 2rem;
-  }
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

@@ -1,7 +1,7 @@
 /* Mobile First - Base styles */
 .terms-container {
   min-height: 100vh;
-  background: #f8f9fa;
+  background: var(--body-background);
 }
 
 /* Header */
@@ -9,15 +9,15 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  background: #7A9B5C;
-  color: white;
+  background: var(--primary-color);
+  color: var(--text-color-light);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .back-button {
   background: none;
   border: none;
-  color: white;
+  color: var(--text-color-light);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.5rem;
@@ -30,10 +30,10 @@
 }
 
 .terms-title {
-  color: white;
+  color: var(--text-color-light);
   margin: 0;
   margin-left: 1rem;
-  font-size: 1.5rem;
+  font-size: var(--font-size-h2);
   font-weight: 600;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .terms-card {
-  background: white;
+  background: var(--card-background);
   border-radius: 12px;
   padding: 2rem;
   max-width: 800px;
@@ -52,8 +52,8 @@
 }
 
 .last-updated {
-  background: #e8f5e8;
-  color: #7A9B5C;
+  background: var(--disabled-bg);
+  color: var(--primary-color);
   padding: 0.75rem;
   border-radius: 8px;
   font-size: 0.9rem;
@@ -67,27 +67,27 @@
 }
 
 .terms-section h2 {
-  color: #7A9B5C;
-  font-size: 1.4rem;
+  color: var(--primary-color);
+  font-size: var(--font-size-h2);
   margin-bottom: 1rem;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-color);
   padding-bottom: 0.5rem;
 }
 
 .terms-section h3 {
-  color: #333;
-  font-size: 1.1rem;
+  color: var(--text-color);
+  font-size: var(--font-size-h3);
   margin: 1.5rem 0 0.75rem 0;
 }
 
 .terms-section p {
-  color: #555;
+  color: var(--secondary-text);
   line-height: 1.6;
   margin-bottom: 1rem;
 }
 
 .terms-section ul {
-  color: #555;
+  color: var(--secondary-text);
   line-height: 1.6;
   margin-left: 1.5rem;
 }
@@ -97,7 +97,7 @@
 }
 
 .link {
-  color: #7A9B5C;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 600;
 }
