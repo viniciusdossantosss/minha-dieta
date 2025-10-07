@@ -1,153 +1,141 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
-import { MealSelectionModalComponent } from '../../shared/meal-selection-modal/meal-selection-modal.component';
 import { AuthService } from '../../services/auth.service';
-import { DietService } from '../../services/diet.service';
-import { MealService } from '../../services/meal.service';
+import { User } from '../../models/user.model';
+import { Router } from '@angular/router';
+import { switchMap, forkJoin, BehaviorSubject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Patient } from '../../models/patient.model';
+import { WeeklyDietSchedule, DietPlan } from '../../models/diet.model';
 import { MealOption, MealType } from '../../models/meal.model';
-import { DietPlan, MealAssignment } from '../../models/diet.model';
-import { forkJoin, Observable, of, BehaviorSubject } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { CalendarWeekComponent, SlotClickEvent } from '../../components/calendar-week/calendar-week.component';
+import { MealSelectionModalComponent } from '../../shared/meal-selection-modal/meal-selection-modal.component';
+import { DietPlansApiService } from '../../services/diet-plans-api.service';
+import { DailyMealChoiceApiService } from '../../services/daily-meal-choice-api.service';
+import { MealOptionsApiService } from '../../services/meal-options-api.service';
+import { PatientApiService } from '../../services/patient-api.service';
 
-interface DayMealSlot {
-  mealType: MealType;
-  icon: string;
-  assignedOption: MealOption | null;
-}
-
-interface DayColumn {
-  date: Date;
-  dayName: string;
-  dayNumber: string;
-  slots: DayMealSlot[];
+interface PatientDashboardData {
+  patient: Patient;
+  weeklyDietSchedule: WeeklyDietSchedule;
+  mealOptions: MealOption[];
 }
 
 @Component({
   selector: 'app-patient-dashboard',
   standalone: true,
-  imports: [CommonModule, DashboardLayoutComponent, MealSelectionModalComponent],
+  imports: [
+    CommonModule,
+    DashboardLayoutComponent,
+    CalendarWeekComponent,
+    MealSelectionModalComponent,
+  ],
   templateUrl: './patient-dashboard.component.html',
   styleUrls: ['./patient-dashboard.component.css']
 })
 export class PatientDashboardComponent implements OnInit {
+  userProfile: User | null = null;
+  private dataSubject = new BehaviorSubject<PatientDashboardData | null>(null);
+  data$ = this.dataSubject.asObservable();
+  
+  startDate = new Date();
+  private lastClickedSlot: SlotClickEvent | null = null;
+
   @ViewChild(MealSelectionModalComponent) mealModal!: MealSelectionModalComponent;
 
-  // Mock do perfil do paciente logado
-  userProfile = {
-    id: 1, // Assumindo paciente ID 1 (Maria Silva)
-    name: 'Maria Silva',
-    age: 32,
-    type: 'patient' as const,
-    status: 'active',
-    lastUpdate: new Date(),
-    email: 'maria.silva@example.com'
-  };
-
-  private weekDataSubject = new BehaviorSubject<DayColumn[]>([]);
-  weekData$ = this.weekDataSubject.asObservable();
-
-  todayMeals$: Observable<DayMealSlot[]>;
-  currentWeekStart = new Date();
-  private lastClickedSlot: { date: Date, mealType: MealType } | null = null;
-
   constructor(
-    private dietService: DietService,
-    private mealService: MealService
-  ) {
-    this.todayMeals$ = of([]);
-  }
+    private authService: AuthService,
+    private router: Router,
+    private dietPlansApiService: DietPlansApiService,
+    private dailyMealChoiceApiService: DailyMealChoiceApiService,
+    private mealOptionsApiService: MealOptionsApiService,
+    private patientApiService: PatientApiService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
-    this.loadWeekData();
-  }
-
-  loadWeekData(): void {
-    const patientId = this.userProfile.id;
-
-    forkJoin({
-      dietPlan: this.dietService.getDietForPatient(patientId),
-      // mealOptions não é mais necessário aqui, pois a dieta já contém os objetos MealOption
-    }).pipe(
-      map(data => this.buildWeekColumns(this.currentWeekStart, data.dietPlan))
-    ).subscribe(weekColumns => {
-      this.weekDataSubject.next(weekColumns);
-      this.updateTodayMeals();
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user && user.userType === 'patient') {
+        this.userProfile = user;
+        if (user.userType === 'patient' && user.nutritionistId) {
+          this.loadData(user.id, user.nutritionistId);
+        } else {
+          // Lidar com o caso em que nutritionistId está faltando para um paciente
+          console.error('Nutritionist ID is missing for patient user.');
+          this.router.navigate(['/login']);
+        }
+      }
+       else {
+        this.router.navigate(['/login']);
+      }
     });
   }
 
-  buildWeekColumns(startDate: Date, dietPlan: DietPlan): DayColumn[] {
-    // mealOptionsMap não é mais necessário
-    const weekDays: DayColumn[] = [];
-    const start = this.getStartOfWeek(startDate);
+  loadData(patientId: number, nutritionistId: number): void {
+    forkJoin({
+      patient: this.patientApiService.getPatientById(patientId, nutritionistId), // Buscar o paciente completo
+      dietPlan: this.dietPlansApiService.getDietPlansByPatient(patientId),
+      mealOptions: this.mealOptionsApiService.getMealOptions(patientId)
+    }).pipe(
+      switchMap(data => {
+        if (!data.patient) return of(null);
 
-    const mealTypes: MealType[] = ['Café da Manhã', 'Lanche da Manhã', 'Almoço', 'Lanche da Tarde', 'Jantar', 'Ceia'];
-    const icons: { [key in MealType]: string } = { 'Café da Manhã': '☕', 'Lanche da Manhã': '🍎', 'Almoço': '🍽️', 'Lanche da Tarde': '🥪', 'Jantar': '🍜', 'Ceia': '🥛' };
+        const weeklyDietSchedule: WeeklyDietSchedule = {
+          patientId: patientId,
+          schedule: {}
+        };
 
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(start);
-      date.setDate(start.getDate() + i);
-      const dateString = this.formatDate(date);
-      const dayAssignments = dietPlan.schedule[dateString] || {};
+        data.dietPlan.forEach(plan => {
+          const dateString = this.formatDate(new Date(plan.date));
+          if (!weeklyDietSchedule.schedule[dateString]) {
+            weeklyDietSchedule.schedule[dateString] = {};
+          }
+          if (plan.mealOptions && plan.mealOptions.length > 0) {
+            weeklyDietSchedule.schedule[dateString][plan.mealType] = plan.mealOptions[0];
+          }
+        });
 
-      weekDays.push({
-        date: date,
-        dayName: date.toLocaleDateString('pt-BR', { weekday: 'short' }),
-        dayNumber: date.getDate().toString(),
-        slots: mealTypes.map(type => {
-          const assignedOption = dayAssignments[type] || null; // Usa diretamente o objeto MealOption
-          return { mealType: type, icon: icons[type], assignedOption };
-        })
-      });
-    }
-    return weekDays;
-  }
-
-  updateTodayMeals(): void {
-    const todayString = this.formatDate(new Date());
-    this.todayMeals$ = this.weekData$.pipe(
-      map(weekData => {
-        const todayColumn = weekData.find(day => this.formatDate(day.date) === todayString);
-        return todayColumn ? todayColumn.slots : [];
+        const patientDashboardData: PatientDashboardData = {
+          patient: data.patient,
+          weeklyDietSchedule: weeklyDietSchedule,
+          mealOptions: data.mealOptions
+        };
+        return of(patientDashboardData);
       })
-    );
+    ).subscribe(data => {
+      this.dataSubject.next(data);
+      this.cdr.detectChanges();
+    });
   }
 
-  openMealSelector(date: Date, mealType: MealType): void {
-    this.lastClickedSlot = { date, mealType };
-    this.mealModal.open(mealType);
+  onSlotClicked(event: SlotClickEvent): void {
+    this.lastClickedSlot = event;
+    if (this.userProfile) {
+      this.mealModal.open(event.mealType, this.userProfile.id, this.dataSubject.value?.mealOptions || []);
+    }
   }
 
   onMealSelected(selectedMeal: MealOption): void {
-    if (!this.lastClickedSlot) return;
+    if (!this.lastClickedSlot || !this.userProfile) return;
 
-    const assignment: MealAssignment = {
-      patientId: this.userProfile.id,
+    const createDailyMealChoiceDto = {
       date: this.formatDate(this.lastClickedSlot.date),
       mealType: this.lastClickedSlot.mealType,
-      mealOption: selectedMeal // Usa o objeto MealOption completo
+      mealOptionId: selectedMeal.id!,
     };
 
-    this.dietService.assignMeal(assignment).subscribe(() => {
-      this.loadWeekData(); // Recarrega os dados para atualizar a UI
+    this.dailyMealChoiceApiService.createOrUpdateDailyMealChoice(createDailyMealChoiceDto).subscribe(() => {
+      if (this.userProfile && this.userProfile.nutritionistId) {
+        this.loadData(this.userProfile.id, this.userProfile.nutritionistId);
+      }
     });
   }
 
-  // --- Funções de Data e Navegação ---
-  getTodayDate = () => new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
-  getCurrentWeekDisplay = () => {
-    const endOfWeek = new Date(this.currentWeekStart);
-    endOfWeek.setDate(this.currentWeekStart.getDate() + 6);
-    return `${this.currentWeekStart.getDate()}/${this.currentWeekStart.getMonth()+1} - ${endOfWeek.getDate()}/${endOfWeek.getMonth()+1}`;
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
-  previousWeek = () => { this.currentWeekStart.setDate(this.currentWeekStart.getDate() - 7); this.loadWeekData(); }
-  nextWeek = () => { this.currentWeekStart.setDate(this.currentWeekStart.getDate() + 7); this.loadWeekData(); }
-  private getStartOfWeek = (date: Date) => {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // ajusta para segunda-feira
-    return new Date(d.setDate(diff));
-  }
-  private formatDate = (date: Date) => `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 }

@@ -1,50 +1,40 @@
-<app-dashboard-layout [userProfile]="userProfile" pageTitle="Opções de Refeições">
-  <div class="meals-container">
-    <!-- Cabeçalho da Página -->
-    <div class="page-header">
-      <h1 class="page-title">Banco de Refeições</h1>
-      <button class="btn-primary" (click)="createNewOption()">
-        <span class="btn-icon">➕</span>
-        Criar Nova Opção
-      </button>
-    </div>
+<ng-container *ngIf="userProfile">
+  <app-dashboard-layout [userProfile]="userProfile" pageTitle="Opções de Refeições">
+    <div class="meal-options-container">
+      <div class="page-header">
+        <h1 class="page-title">Gerenciamento de Opções de Refeições</h1>
+        <button class="btn-primary" (click)="createNewOption()">
+          <span class="btn-icon">➕</span>
+          Criar Nova Opção
+        </button>
+      </div>
 
-    <!-- Seções de Refeições Agrupadas -->
-    <div class="meals-grid" *ngIf="mealOptions.length > 0; else noMeals">
-      <ng-container *ngFor="let type of mealTypes">
-        <div class="meal-group" *ngIf="groupedMeals[type]">
-          <h2 class="group-title">{{ type }}</h2>
-          <div class="options-list">
-            <ng-container *ngFor="let meal of groupedMeals[type]">
-              <div class="meal-card" *ngIf="meal.id !== undefined">
-                <div class="card-header">
-                  <h3 class="meal-name">{{ meal.name }}</h3>
-                  <div class="meal-actions">
-                    <button class="btn-icon" title="Editar" (click)="editMeal(meal.id)">✏️</button>
-                    <button class="btn-icon btn-delete" title="Excluir" (click)="deleteMeal(meal.id)">🗑️</button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <ul>
-                    <li *ngFor="let item of meal.items">
-                      {{ item.quantity }} - {{ item.description }}
-                    </li>
-                  </ul>
-                </div>
+      <div class="meal-types-grid">
+        <div class="meal-type-card" *ngFor="let type of mealTypes">
+          <h2 class="meal-type-title">{{ type }}</h2>
+          <div class="meal-list">
+            <div class="meal-item" *ngFor="let meal of groupedMeals[type]">
+              <div class="meal-details">
+                <h3 class="meal-name">{{ meal.name }}</h3>
+                <ul class="food-items">
+                  <li *ngFor="let item of meal.items">{{ item.quantity }} {{ item.description }}</li>
+                </ul>
               </div>
-            </ng-container>
+              <div class="meal-actions">
+                <button class="btn-icon" (click)="editMeal(meal.id!)" title="Editar">
+                  ✏️
+                </button>
+                <button class="btn-icon btn-delete" (click)="deleteMeal(meal.id!)" title="Excluir">
+                  🗑️
+                </button>
+              </div>
+            </div>
+            <div *ngIf="!groupedMeals[type]?.length" class="no-meals-message">
+              Nenhuma opção de {{ type }} cadastrada.
+            </div>
           </div>
         </div>
-      </ng-container>
-    </div>
-
-    <!-- Mensagem de Nenhuma Refeição -->
-    <ng-template #noMeals>
-      <div class="centered-message">
-        <p>Nenhuma opção de refeição cadastrada ainda.</p>
-        <button class="btn-primary">Criar minha primeira opção</button>
       </div>
-    </ng-template>
-
-  </div>
-</app-dashboard-layout>
+    </div>
+  </app-dashboard-layout>
+</ng-container>

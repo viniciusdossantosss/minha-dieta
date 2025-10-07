@@ -12,6 +12,7 @@ import { PatientDetailComponent } from './pages/patient-detail/patient-detail.co
 import { PatientFormComponent } from './pages/patient-form/patient-form.component';
 import { MealOptionsComponent } from './pages/meal-options/meal-options.component';
 import { MealOptionFormComponent } from './pages/meal-option-form/meal-option-form.component';
+import { ProfileComponent } from './pages/profile/profile.component'; // Importar ProfileComponent
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,6 +23,12 @@ export const routes: Routes = [
   {
     path: 'nutritionist/dashboard',
     component: NutritionistDashboardComponent,
+    canActivate: [authGuard],
+    data: { userType: 'nutritionist' },
+  },
+  {
+    path: 'nutritionist/profile',
+    component: ProfileComponent,
     canActivate: [authGuard],
     data: { userType: 'nutritionist' },
   },
@@ -50,19 +57,19 @@ export const routes: Routes = [
     data: { userType: 'nutritionist' },
   },
   {
-    path: 'nutritionist/meal-options',
+    path: 'nutritionist/patients/:patientId/meal-options',
     component: MealOptionsComponent,
     canActivate: [authGuard],
     data: { userType: 'nutritionist' },
   },
   {
-    path: 'nutritionist/meal-options/add',
+    path: 'nutritionist/patients/:patientId/meal-options/add',
     component: MealOptionFormComponent,
     canActivate: [authGuard],
     data: { userType: 'nutritionist' },
   },
   {
-    path: 'nutritionist/meal-options/:id/edit',
+    path: 'nutritionist/patients/:patientId/meal-options/:id/edit',
     component: MealOptionFormComponent,
     canActivate: [authGuard],
     data: { userType: 'nutritionist' },
@@ -70,6 +77,12 @@ export const routes: Routes = [
   {
     path: 'patient/dashboard',
     component: PatientDashboardComponent,
+    canActivate: [authGuard],
+    data: { userType: 'patient' },
+  },
+  {
+    path: 'patient/profile',
+    component: ProfileComponent,
     canActivate: [authGuard],
     data: { userType: 'patient' },
   },

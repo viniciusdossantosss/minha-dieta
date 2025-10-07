@@ -1,62 +1,49 @@
-<app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
-  <div class="form-container">
-    <div class="page-header">
-      <button class="btn-back" (click)="goBack()">
-        &larr; Voltar para Opções de Refeições
-      </button>
-    </div>
+<ng-container *ngIf="userProfile">
+  <app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
+    <div class="form-container">
+      <div class="form-header">
+        <h1 class="form-title">{{ pageTitle }}</h1>
+        <button class="btn-back" (click)="goBack()">Voltar</button>
+      </div>
 
-    <div class="form-card">
       <form [formGroup]="mealForm" (ngSubmit)="onSubmit()">
-        <!-- Linha 1: Nome e Tipo -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Nome da Opção</label>
-            <input id="name" type="text" formControlName="name" placeholder="Ex: Ovos com Fruta">
-          </div>
-          <div class="form-group">
-            <label for="type">Tipo de Refeição</label>
-            <select id="type" formControlName="type">
-              <option value="" disabled>Selecione o tipo</option>
-              <option *ngFor="let type of mealTypes" [value]="type">{{ type }}</option>
-            </select>
-          </div>
+        <!-- Nome da Refeição -->
+        <div class="form-group">
+          <label for="name">Nome da Opção</label>
+          <input id="name" formControlName="name" placeholder="Ex: Omelete com queijo e tomate">
         </div>
 
-        <!-- Seção de Itens Dinâmicos -->
+        <!-- Tipo de Refeição -->
+        <div class="form-group">
+          <label for="type">Tipo de Refeição</label>
+          <select id="type" formControlName="type">
+            <option value="" disabled>Selecione o tipo</option>
+            <option *ngFor="let type of mealTypes" [value]="type">{{ type }}</option>
+          </select>
+        </div>
+
+        <!-- Itens da Refeição -->
         <div class="items-section">
-          <h3 class="items-title">Itens da Refeição</h3>
+          <h3>Itens da Refeição</h3>
           <div formArrayName="items">
-            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="item-row">
-              <div class="form-group item-quantity">
-                <label for="quantity-{{i}}">Quantidade</label>
-                <input id="quantity-{{i}}" type="text" formControlName="quantity" placeholder="Ex: 2 fatias">
+            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="item-group">
+              <div class="form-group-inline">
+                <input formControlName="quantity" placeholder="Ex: 2 unidades">
+                <input formControlName="description" placeholder="Ex: Ovos">
               </div>
-              <div class="form-group item-description">
-                <label for="description-{{i}}">Descrição</label>
-                <input id="description-{{i}}" type="text" formControlName="description" placeholder="Ex: Pão integral">
-              </div>
-              <div class="item-actions">
-                <button type="button" class="btn-icon btn-delete" title="Remover Item" (click)="removeItem(i)" [disabled]="items.length <= 1">
-                  🗑️
-                </button>
-              </div>
+              <button type="button" class="btn-remove" (click)="removeItem(i)">Remover</button>
             </div>
           </div>
-          <button type="button" class="btn-secondary btn-add-item" (click)="addItem()">
-            <span class="btn-icon">➕</span>
-            Adicionar outro item
-          </button>
+          <button type="button" class="btn-add-item" (click)="addItem()">Adicionar Item</button>
         </div>
 
-        <!-- Ações do Formulário -->
+        <!-- Botões de Ação -->
         <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="goBack()">Cancelar</button>
           <button type="submit" class="btn-primary" [disabled]="mealForm.invalid">
-            {{ isEditMode ? 'Salvar Alterações' : 'Salvar Opção' }}
+            {{ isEditMode ? 'Atualizar Refeição' : 'Salvar Refeição' }}
           </button>
         </div>
       </form>
     </div>
-  </div>
-</app-dashboard-layout>
+  </app-dashboard-layout>
+</ng-container>

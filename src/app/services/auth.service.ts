@@ -3,15 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
+import { User } from '../models/user.model'; // Importar o novo modelo User
 
 export type UserType = 'nutritionist' | 'patient';
 
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  userType: UserType;
-}
+// A interface User agora é importada de user.model.ts
 
 export interface LoginResponse {
   access_token: string;
@@ -36,7 +32,7 @@ export class AuthService {
       
       if (token && userData) {
         try {
-          const user = JSON.parse(userData);
+          const user: User = JSON.parse(userData);
           this.currentUser$.next(user);
         } catch (error) {
           console.error('Erro ao carregar dados do usuário:', error);
@@ -78,6 +74,7 @@ export class AuthService {
     userType: UserType;
     crn?: string;
     phone?: string;
+    photoUrl?: string;
   }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}${API_CONFIG.endpoints.auth.register}`, userData ).pipe(
       tap(response => {
@@ -121,5 +118,13 @@ export class AuthService {
 
   getToken(): string | null {
     return typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  }
+
+  // Novo método para atualizar o usuário logado
+  updateCurrentUser(updatedUser: User): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user_data', JSON.stringify(updatedUser));
+      this.currentUser$.next(updatedUser);
+    }
   }
 }

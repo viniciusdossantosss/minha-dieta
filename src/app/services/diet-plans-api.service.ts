@@ -1,23 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
-import { MealType, MealOption } from './meal-options-api.service';
-import { PatientAPI } from './patient-api.service';
-
-export interface DietPlan {
-  id: number;
-  date: Date;
-  mealType: MealType;
-  notes?: string;
-  completed: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  patientId: number;
-  mealOptionId: number;
-  patient?: PatientAPI;
-  mealOption?: MealOption;
-}
+import { DietPlan } from '../models/diet.model'; // Importar DietPlan do modelo
+import { MealType, MealOption } from '../models/meal.model'; // Importar MealType e MealOption do modelo
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +13,26 @@ export class DietPlansApiService {
 
   constructor(private http: HttpClient ) { }
 
+  createDietPlan(createDietPlanDto: {
+    patientId: number;
+    date: Date;
+    mealType: MealType;
+    mealOptions: { id: number }[]; // Usar array de IDs para mealOptions
+    notes?: string;
+    completed?: boolean;
+  }): Observable<DietPlan> {
+    return this.http.post<DietPlan>(this.baseUrl, createDietPlanDto ).pipe(
+      catchError(error => {
+        console.error('Erro ao criar plano de dieta:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   getDietPlans(patientId?: number, date?: string): Observable<DietPlan[]> {
-    const params: any = {};
-    if (patientId) params.patientId = patientId;
-    if (date) params.date = date;
+    let params = new HttpParams();
+    if (patientId) params = params.set('patientId', patientId.toString());
+    if (date) params = params.set('date', date);
     
     return this.http.get<DietPlan[]>(this.baseUrl, { params } ).pipe(
       catchError(error => {
@@ -49,14 +51,18 @@ export class DietPlansApiService {
     );
   }
 
-  getWeeklyDietPlans(date: string, patientId?: number): Observable<DietPlan[]> {
-    const params = patientId ? { patientId } : {};
-    return this.http.get<DietPlan[]>(`${this.baseUrl}/week/${date}`, { params } ).pipe(
-      catchError(error => {
-        console.error('Erro ao buscar planos da semana:', error);
-        return throwError(() => error);
-      })
-    );
+  getDietPlansByNutritionist(): Observable<DietPlan[]> {
+    return this.http.get<DietPlan[]>(this.baseUrl);
+  }
+
+  getDietPlanForWeek(date: string, patientId?: number): Observable<DietPlan[]> {
+    let params = new HttpParams();
+    if (patientId) {
+      params = params.set('patientId', patientId.toString());
+    }
+    params = params.set('date', date); // Adicionar a data como parâmetro de query
+
+    return this.http.get<DietPlan[]>(`${this.baseUrl}/week/${date}`, { params });
   }
 
   getDietPlan(id: number): Observable<DietPlan> {
@@ -68,23 +74,14 @@ export class DietPlansApiService {
     );
   }
 
-  createDietPlan(dietPlan: {
-    patientId: number;
-    date: Date;
-    mealType: MealType;
-    mealOptionId: number;
+  updateDietPlan(id: number, updates: {
+    patientId?: number;
+    date?: Date;
+    mealType?: MealType;
+    mealOptions?: { id: number }[];
     notes?: string;
     completed?: boolean;
   }): Observable<DietPlan> {
-    return this.http.post<DietPlan>(this.baseUrl, dietPlan ).pipe(
-      catchError(error => {
-        console.error('Erro ao criar plano de dieta:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-
-  updateDietPlan(id: number, updates: Partial<DietPlan>): Observable<DietPlan> {
     return this.http.put<DietPlan>(`${this.baseUrl}/${id}`, updates ).pipe(
       catchError(error => {
         console.error('Erro ao atualizar plano de dieta:', error);

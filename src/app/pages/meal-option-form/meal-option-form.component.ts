@@ -4,7 +4,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } fr
 import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
 import { MealService } from '../../services/meal.service';
-import { MealType, MealOption, FoodItem } from '../../models/meal.model';
+import { MealType, FoodItem } from '../../models/meal.model';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-meal-option-form',
@@ -14,41 +16,47 @@ import { MealType, MealOption, FoodItem } from '../../models/meal.model';
   styleUrls: ['./meal-option-form.component.css']
 })
 export class MealOptionFormComponent implements OnInit {
-  mealForm: FormGroup;
+  mealForm!: FormGroup;
   isEditMode = false;
   pageTitle = 'Criar Nova Opção de Refeição';
-  mealTypes: MealType[] = ['Café da Manhã', 'Lanche da Manhã', 'Almoço', 'Lanche da Tarde', 'Jantar', 'Ceia'];
+  mealTypes: MealType[] = [MealType.BREAKFAST, MealType.MORNING_SNACK, MealType.LUNCH, MealType.AFTERNOON_SNACK, MealType.DINNER, MealType.EVENING_SNACK];
   private mealId: number | null = null;
+  private patientId: number | null = null; // Adicionar patientId
 
-  userProfile = {
-    name: 'Juliana Sobral',
-    type: 'nutritionist' as const,
-    avatar: '/assets/default-avatar.png',
-    email: 'juliana@minhadieta.com'
-  };
+  userProfile: User | null = null;
 
   constructor(
     private fb: FormBuilder,
     private mealService: MealService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private authService: AuthService
   ) {
-    this.mealForm = this.fb.group({
-      id: [null],
-      name: ['', Validators.required],
-      type: ['', Validators.required],
-      items: this.fb.array([], Validators.required)
-    });
+    // A inicialização do formulário será feita em ngOnInit após obter o patientId
   }
 
   ngOnInit(): void {
+    this.authService.getCurrentUser().subscribe(user => {
+      this.userProfile = user;
+    });
+
     this.route.paramMap.subscribe(params => {
+      const patientIdParam = params.get('patientId'); // Obter patientId da rota
+      if (patientIdParam) {
+        this.patientId = +patientIdParam;
+        this.initializeForm(this.patientId);
+      } else {
+        // Redirecionar ou mostrar erro se patientId não estiver na rota
+        this.router.navigate(['/nutritionist/patients']);
+        return;
+      }
+
       const id = params.get('id');
-      if (id) {
+      if (id && this.patientId) {
         this.isEditMode = true;
         this.mealId = +id;
         this.pageTitle = 'Editar Opção de Refeição';
-        this.mealService.getMealOptionById(this.mealId).subscribe(meal => {
+        this.mealService.getMealOptionById(this.mealId, this.patientId).subscribe(meal => {
           if (meal) {
             this.mealForm.patchValue({ name: meal.name, type: meal.type });
             this.setItems(meal.items);
@@ -58,8 +66,18 @@ export class MealOptionFormComponent implements OnInit {
     });
 
     if (!this.isEditMode) {
-      this.addItem(); // Começa com um item se for modo de criação
+      this.addItem();
     }
+  }
+
+  initializeForm(patientId: number): void {
+    this.mealForm = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      type: ['', Validators.required],
+      patientId: [patientId], // Adicionar patientId ao formulário
+      items: this.fb.array([], Validators.required)
+    });
   }
 
   get items(): FormArray {
@@ -89,21 +107,25 @@ export class MealOptionFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.mealForm.valid) {
+    if (this.mealForm.valid && this.patientId) {
       const formData = this.mealForm.value;
       if (this.isEditMode && this.mealId) {
-        this.mealService.updateMealOption({ ...formData, id: this.mealId }).subscribe(() => {
-          this.router.navigate(['/nutritionist/meal-options']);
+        this.mealService.updateMealOption({ ...formData, id: this.mealId, patientId: this.patientId }).subscribe(() => {
+          this.router.navigate(['/nutritionist/patients', this.patientId, 'meal-options']);
         });
       } else {
-        this.mealService.addMealOption(formData).subscribe(() => {
-          this.router.navigate(['/nutritionist/meal-options']);
+        this.mealService.addMealOption({ ...formData, patientId: this.patientId }).subscribe(() => {
+          this.router.navigate(['/nutritionist/patients', this.patientId, 'meal-options']);
         });
       }
     }
   }
 
   goBack(): void {
-    this.router.navigate(['/nutritionist/meal-options']);
+    if (this.patientId) {
+      this.router.navigate(['/nutritionist/patients', this.patientId, 'meal-options']);
+    } else {
+      this.router.navigate(['/nutritionist/patients']);
+    }
   }
 }

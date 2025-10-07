@@ -3,11 +3,29 @@ export interface FoodItem {
   quantity: string;    // Ex: "2 fatias"
 }
 
-export type MealType = 'Café da Manhã' | 'Lanche da Manhã' | 'Almoço' | 'Lanche da Tarde' | 'Jantar' | 'Ceia';
+export type MealItem = FoodItem; // Exportar FoodItem como MealItem
+
+export enum MealType {
+  BREAKFAST = 'Café da Manhã',
+  MORNING_SNACK = 'Lanche da Manhã',
+  LUNCH = 'Almoço',
+  AFTERNOON_SNACK = 'Lanche da Tarde',
+  DINNER = 'Jantar',
+  EVENING_SNACK = 'Ceia'
+}
 
 export interface MealOption {
-  id?: number; // Opcional: usado para modelos de refeição
-  name: string;     // Ex: "Opção 1 - Ovos e Pão"
-  type: MealType;  // Ex: "Café da Manhã"
-  items: FoodItem[];
+  id?: number;
+  name: string;
+  type: MealType;
+  description?: string;
+  calories?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  patientId: number; // Adicionar patientId
+  items: MealItem[];
 }

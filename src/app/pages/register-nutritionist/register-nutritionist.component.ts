@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location, CommonModule } from '@angular/common';
+import { AuthService, UserType } from '../../services/auth.service'; // Importar UserType do auth.service
 
 @Component({
   selector: 'app-register-nutritionist',
@@ -20,14 +21,15 @@ export class RegisterNutritionistComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) {
-    // Inicializar o formulário com validações
     this.registerForm = this.formBuilder.group({
       fullName: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       crn: ['', [Validators.required, this.crnValidator]],
       phone: ['', [Validators.required, this.phoneValidator]],
+      photoUrl: ['', [Validators.pattern(/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]],
       acceptTerms: [false, [Validators.requiredTrue]]
@@ -39,7 +41,7 @@ export class RegisterNutritionistComponent implements OnInit {
   ngOnInit(): void {}
 
   // Validador customizado para CRN
-  crnValidator(control: AbstractControl): ValidationErrors | null {
+  crnValidator = (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;
     
     // Formato: 12345/SP ou 12345-SP
@@ -48,7 +50,7 @@ export class RegisterNutritionistComponent implements OnInit {
   }
 
   // Validador customizado para telefone
-  phoneValidator(control: AbstractControl): ValidationErrors | null {
+  phoneValidator = (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null;
     
     // Remove caracteres não numéricos para validação
@@ -58,7 +60,7 @@ export class RegisterNutritionistComponent implements OnInit {
   }
 
   // Validador para confirmação de senha
-  passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
+  passwordMatchValidator = (form: AbstractControl): ValidationErrors | null => {
     const password = form.get('password');
     const confirmPassword = form.get('confirmPassword');
     
@@ -128,26 +130,23 @@ export class RegisterNutritionistComponent implements OnInit {
 
       const formData = this.registerForm.value;
       
-      // Remover confirmPassword antes de enviar
       const { confirmPassword, ...registrationData } = formData;
 
-      // Simular chamada de API
-      setTimeout(() => {
-        console.log('Registration data:', registrationData);
-        
-        // Simular sucesso
-        alert('Cadastro realizado com sucesso! Você será redirecionado para o login.');
-        this.router.navigate(['/login'], { queryParams: { type: 'nutritionist' } });
-        
-        this.isLoading = false;
-      }, 2000);
-    } else {
-      // Marcar todos os campos como touched para mostrar erros
-      Object.keys(this.registerForm.controls).forEach(key => {
-        this.registerForm.get(key)?.markAsTouched();
+      this.authService.register({
+        ...registrationData,
+        name: registrationData.fullName,
+        userType: 'nutritionist', // Usar a string literal
+      }).subscribe({
+        next: () => {
+          alert('Cadastro realizado com sucesso! Você será redirecionado para o login.');
+          this.router.navigate(['/login'], { queryParams: { type: 'nutritionist' } });
+          this.isLoading = false;
+        },
+        error: (err) => {
+          this.registerError = err.error?.message || 'Erro ao cadastrar. Tente novamente.';
+          this.isLoading = false;
+        }
       });
-      
-      this.registerError = 'Por favor, corrija os erros no formulário.';
     }
   }
 }

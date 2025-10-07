@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DietPlan } from '../../models/diet.model';
+import { WeeklyDietSchedule } from '../../models/diet.model'; // Importar WeeklyDietSchedule
 import { MealOption, MealType } from '../../models/meal.model';
 
 export interface SlotClickEvent {
@@ -18,12 +18,12 @@ export interface SlotClickEvent {
 })
 export class CalendarWeekComponent implements OnChanges {
   @Input() startDate: Date = new Date();
-  @Input() dietPlan: DietPlan | null = null;
+  @Input() weeklyDietSchedule: WeeklyDietSchedule | null = null; // Usar WeeklyDietSchedule
   @Input() mealOptions: MealOption[] = [];
   @Output() slotClick = new EventEmitter<SlotClickEvent>();
 
   weekDays: Date[] = [];
-  mealTypes: MealType[] = ['Café da Manhã', 'Lanche da Manhã', 'Almoço', 'Lanche da Tarde', 'Jantar', 'Ceia'];
+  mealTypes: MealType[] = [MealType.BREAKFAST, MealType.MORNING_SNACK, MealType.LUNCH, MealType.AFTERNOON_SNACK, MealType.DINNER, MealType.EVENING_SNACK];
   private mealOptionsMap: Map<number, MealOption> = new Map();
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -31,7 +31,6 @@ export class CalendarWeekComponent implements OnChanges {
       this.generateWeekDays();
     }
     if (changes['mealOptions']) {
-      // Filtra apenas as opções de refeição que possuem um ID definido para o mapa
       this.mealOptionsMap = new Map(this.mealOptions.filter(o => o.id !== undefined).map(o => [o.id as number, o]));
     }
   }
@@ -39,7 +38,6 @@ export class CalendarWeekComponent implements OnChanges {
   generateWeekDays(): void {
     this.weekDays = [];
     const current = new Date(this.startDate);
-    // Ajusta para o início da semana (domingo)
     current.setDate(current.getDate() - current.getDay());
     for (let i = 0; i < 7; i++) {
       this.weekDays.push(new Date(current));
@@ -48,11 +46,10 @@ export class CalendarWeekComponent implements OnChanges {
   }
 
   getAssignedMeal(date: Date, mealType: MealType): MealOption | undefined {
-    if (!this.dietPlan) return undefined;
+    if (!this.weeklyDietSchedule) return undefined;
     
     const dateString = this.formatDate(date);
-    // O schedule agora armazena diretamente o objeto MealOption
-    const assignedMealOption = this.dietPlan.schedule[dateString]?.[mealType];
+    const assignedMealOption = this.weeklyDietSchedule.schedule[dateString]?.[mealType];
     
     return assignedMealOption || undefined;
   }

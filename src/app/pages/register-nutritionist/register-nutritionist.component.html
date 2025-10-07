@@ -75,6 +75,22 @@
         </div>
       </div>
 
+      <!-- Photo URL (Opcional) -->
+      <div class="form-group">
+        <label for="photoUrl">URL da Foto de Perfil (Opcional)</label>
+        <input 
+          type="url" 
+          id="photoUrl"
+          formControlName="photoUrl"
+          placeholder="Ex: https://minhafoto.com/perfil.jpg"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('photoUrl')"
+        >
+        <div class="error-message" *ngIf="isFieldInvalid('photoUrl')">
+          <span *ngIf="registerForm.get('photoUrl')?.errors?.['pattern']">URL inválida.</span>
+        </div>
+      </div>
+
       <!-- Senha -->
       <div class="form-group">
         <label for="password">Senha *</label>

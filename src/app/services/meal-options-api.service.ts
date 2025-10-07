@@ -1,40 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { API_CONFIG } from '../config/api.config';
-
-export enum MealType {
-  BREAKFAST = 'Café da Manhã',
-  MORNING_SNACK = 'Lanche da Manhã',
-  LUNCH = 'Almoço',
-  AFTERNOON_SNACK = 'Lanche da Tarde',
-  DINNER = 'Jantar',
-  EVENING_SNACK = 'Ceia'
-}
-
-export interface MealItem {
-  id?: number;
-  description: string;
-  quantity: string;
-  calories?: number;
-  notes?: string;
-}
-
-export interface MealOption {
-  id: number;
-  name: string;
-  type: MealType;
-  description?: string;
-  calories?: number;
-  protein?: number;
-  carbs?: number;
-  fat?: number;
-  isActive: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  nutritionistId: number;
-  items: MealItem[];
-}
+import { MealOption, MealType, MealItem } from '../models/meal.model'; // Importar MealOption, MealType e MealItem do modelo
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +12,14 @@ export class MealOptionsApiService {
 
   constructor(private http: HttpClient ) { }
 
-  getMealOptions(type?: MealType): Observable<MealOption[]> {
-    const params = type ? { type } : {};
+  getMealOptions(patientId?: number, type?: MealType): Observable<MealOption[]> {
+    let params = new HttpParams();
+    if (patientId) {
+      params = params.set('patientId', patientId.toString());
+    }
+    if (type) {
+      params = params.set('type', type);
+    }
     return this.http.get<MealOption[]>(this.baseUrl, { params } ).pipe(
       catchError(error => {
         console.error('Erro ao buscar opções de refeições:', error);

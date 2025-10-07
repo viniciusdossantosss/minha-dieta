@@ -1,13 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SideMenuComponent } from '../side-menu/side-menu.component';
-
-interface UserProfile {
-  name: string;
-  type: 'nutritionist' | 'patient';
-  avatar?: string;
-  email?: string;
-}
+import { User } from '../../models/user.model'; // Importar User
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -18,11 +12,7 @@ interface UserProfile {
 })
 export class DashboardLayoutComponent {
   @Input() pageTitle = 'Dashboard';
-  @Input() userProfile: UserProfile = {
-    name: 'Juliana Sobral',
-    type: 'nutritionist',
-    avatar: '/assets/default-avatar.png'
-  };
+  @Input() userProfile: User | null = null; // Aceitar User ou null
 
   isSideMenuOpen = false;
 

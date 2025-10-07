@@ -1,13 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
-interface UserProfile {
-  name: string;
-  type: 'nutritionist' | 'patient';
-  avatar?: string;
-  email?: string;
-}
+import { User } from '../../models/user.model'; // Importar User
 
 @Component({
   selector: 'app-side-menu',
@@ -18,10 +12,7 @@ interface UserProfile {
 })
 export class SideMenuComponent {
   @Input() isOpen = false;
-  @Input() userProfile: UserProfile = {
-    name: 'Usuário',
-    type: 'nutritionist'
-  };
+  @Input() userProfile: User | null = null; // Aceitar User ou null
   
   @Output() menuClosed = new EventEmitter<void>();
 

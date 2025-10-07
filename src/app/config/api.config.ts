@@ -5,5 +5,9 @@ export const API_CONFIG = {
       login: '/auth/login',
       register: '/auth/register',
     },
+    mealOptions: '/meal-options',
+    patients: '/patients',
+    dietPlans: '/diet-plans',
+    dailyMealChoices: '/daily-meal-choices',
   },
 };

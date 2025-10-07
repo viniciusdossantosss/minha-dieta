@@ -1,13 +1,20 @@
 export interface Patient {
   id: number;
   name: string;
-  age: number;
+  age?: number; // Tornar opcional
   type?: 'patient'; // Adicionado para compatibilidade
-  avatar?: string;
+  photoUrl?: string;
   status: 'active' | 'inactive';
   lastUpdate: Date;
-  email?: string; // Adicionando campos que podem ser úteis
+  email?: string;
   phone?: string;
-  goal?: string; // Ex: Perder peso, ganhar massa
-  nutritionistId: number; // ID do nutricionista responsável
+  goal?: string;
+  nutritionistId: number;
+  // Adicionar campos que existem na entidade Patient do backend
+  weight?: number;
+  height?: number;
+  gender?: string;
+  medicalHistory?: string;
+  allergies?: string;
+  dietaryRestrictions?: string;
 }

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
 import { MealOption, MealType } from '../../models/meal.model';
 import { MealService } from '../../services/meal.service';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-meal-options',
@@ -15,26 +17,42 @@ import { MealService } from '../../services/meal.service';
 export class MealOptionsComponent implements OnInit {
   mealOptions: MealOption[] = [];
   groupedMeals: { [key in MealType]?: MealOption[] } = {};
-  mealTypes: MealType[] = ['Café da Manhã', 'Lanche da Manhã', 'Almoço', 'Lanche da Tarde', 'Jantar', 'Ceia'];
+  mealTypes: MealType[] = [MealType.BREAKFAST, MealType.MORNING_SNACK, MealType.LUNCH, MealType.AFTERNOON_SNACK, MealType.DINNER, MealType.EVENING_SNACK];
 
-  userProfile = {
-    name: 'Juliana Sobral',
-    type: 'nutritionist' as const, // Corrigido para o tipo literal
-    avatar: '/assets/default-avatar.png',
-    email: 'juliana@minhadieta.com'
-  };
+  userProfile: User | null = null;
+  patientId: number | null = null; // Adicionar patientId
 
-  constructor(private mealService: MealService, private router: Router) { }
+  constructor(
+    private mealService: MealService, 
+    private router: Router,
+    private route: ActivatedRoute, // Injetar ActivatedRoute
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
-    this.loadMeals();
+    this.authService.getCurrentUser().subscribe(user => {
+      this.userProfile = user;
+    });
+
+    this.route.paramMap.subscribe(params => {
+      const patientIdParam = params.get('patientId');
+      if (patientIdParam) {
+        this.patientId = +patientIdParam;
+        this.loadMeals();
+      } else {
+        // Redirecionar ou mostrar erro se patientId não estiver na rota
+        this.router.navigate(['/nutritionist/patients']);
+      }
+    });
   }
 
   loadMeals(): void {
-    this.mealService.getMealOptions().subscribe(options => {
-      this.mealOptions = options;
-      this.groupMealsByType();
-    });
+    if (this.patientId) {
+      this.mealService.getMealOptions(this.patientId).subscribe(options => {
+        this.mealOptions = options;
+        this.groupMealsByType();
+      });
+    }
   }
 
   groupMealsByType(): void {
@@ -45,19 +63,21 @@ export class MealOptionsComponent implements OnInit {
   }
 
   createNewOption(): void {
-    this.router.navigate(['/nutritionist/meal-options/add']);
+    if (this.patientId) {
+      this.router.navigate(['/nutritionist/patients', this.patientId, 'meal-options', 'add']);
+    }
   }
 
   editMeal(id: number): void {
-    this.router.navigate(['/nutritionist/meal-options', id, 'edit']);
+    if (this.patientId) {
+      this.router.navigate(['/nutritionist/patients', this.patientId, 'meal-options', id, 'edit']);
+    }
   }
 
   deleteMeal(id: number): void {
-    if (confirm('Tem certeza que deseja excluir esta opção de refeição?')) {
-      this.mealService.deleteMealOption(id).subscribe(success => {
-        if (success) {
-          this.loadMeals();
-        }
+    if (confirm('Tem certeza que deseja excluir esta opção de refeição?') && this.patientId) {
+      this.mealService.deleteMealOption(id, this.patientId).subscribe(() => {
+        this.loadMeals();
       });
     }
   }

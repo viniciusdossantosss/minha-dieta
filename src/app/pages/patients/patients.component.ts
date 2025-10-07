@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
 import { Patient } from '../../models/patient.model';
 import { PatientService } from '../../services/patient.service';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-patients',
@@ -18,25 +20,30 @@ export class PatientsComponent implements OnInit {
   filteredPatients: Patient[] = [];
   searchTerm = '';
 
-  // Mock UserProfile para o layout do dashboard
-  userProfile = {
-    id: 1, // ID do nutricionista simulado
-    name: 'Juliana Sobral',
-    type: 'nutritionist' as const,
-    avatar: '/assets/default-avatar.png',
-    email: 'juliana@minhadieta.com'
-  };
+  userProfile: User | null = null; // Corrigido
 
-  constructor(private patientService: PatientService, private router: Router) {}
+  constructor(
+    private patientService: PatientService,
+    private router: Router,
+    private authService: AuthService // Injetado
+  ) {}
 
   ngOnInit(): void {
-    this.loadPatients();
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user && user.userType === 'nutritionist') {
+        this.userProfile = user;
+        this.loadPatients(user.id);
+      } else {
+        // Redirecionar se não for nutricionista
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
-  loadPatients(): void {
-    this.patientService.getPatients(this.userProfile.id).subscribe(patients => {
+  loadPatients(nutritionistId: number): void {
+    this.patientService.getPatients(nutritionistId).subscribe(patients => {
       this.allPatients = patients;
-      this.filterPatients(); // Aplica o filtro atual à nova lista
+      this.filterPatients();
     });
   }
 
@@ -60,12 +67,9 @@ export class PatientsComponent implements OnInit {
   }
 
   deletePatient(patientId: number): void {
-    if (confirm(`Tem certeza que deseja excluir o paciente?`)) {
-      this.patientService.deletePatient(patientId, this.userProfile.id).subscribe(success => {
-        if (success) {
-          // Recarrega a lista de pacientes para refletir a exclusão
-          this.loadPatients();
-        }
+    if (confirm(`Tem certeza que deseja excluir o paciente?`) && this.userProfile) {
+      this.patientService.deletePatient(patientId, this.userProfile.id).subscribe(() => {
+        this.loadPatients(this.userProfile!.id); // Recarrega a lista
       });
     }
   }

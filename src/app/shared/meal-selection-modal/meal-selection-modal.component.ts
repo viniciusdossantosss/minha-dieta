@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MealOption, MealType } from '../../models/meal.model';
-import { MealService } from '../../services/meal.service';
 
 @Component({
   selector: 'app-meal-selection-modal',
@@ -19,16 +18,13 @@ export class MealSelectionModalComponent {
   @Output() mealSelected = new EventEmitter<MealOption>();
   @Output() close = new EventEmitter<void>();
 
-  constructor(private mealService: MealService) {}
+  constructor() {}
 
-  open(mealType: MealType): void {
+  open(mealType: MealType, patientId: number, assignedOptions: MealOption[]): void {
     this.mealType = mealType;
     this.isOpen = true;
     this.selectedOption = null;
-
-    this.mealService.getMealOptions().subscribe(options => {
-      this.availableOptions = options.filter(o => o.type === this.mealType);
-    });
+    this.availableOptions = assignedOptions;
   }
 
   closeModal(): void {

@@ -1,65 +1,67 @@
-<app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
-  <div class="form-container">
-    <!-- Cabeçalho com botão de voltar -->
-    <div class="page-header">
-      <button class="btn-back" (click)="goBack()">
-        &larr; Voltar para a lista
-      </button>
-    </div>
+<ng-container *ngIf="userProfile">
+  <app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
+    <div class="form-container">
+      <!-- Cabeçalho com botão de voltar -->
+      <div class="page-header">
+        <button class="btn-back" (click)="goBack()">
+          &larr; Voltar para a lista
+        </button>
+      </div>
 
-    <div class="form-card">
-      <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
-        <!-- Linha 1: Nome e Email -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Nome Completo</label>
-            <input id="name" type="text" formControlName="name" placeholder="Digite o nome do paciente">
-          </div>
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" placeholder="exemplo@email.com">
-          </div>
-        </div>
-
-        <!-- Linha 2: Idade e Telefone -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="age">Idade</label>
-            <input id="age" type="number" formControlName="age" placeholder="Ex: 30">
-          </div>
-          <div class="form-group">
-            <label for="phone">Telefone (Opcional)</label>
-            <input id="phone" type="tel" formControlName="phone" placeholder="(XX) XXXXX-XXXX">
-          </div>
-        </div>
-
-        <!-- Linha 3: Objetivo -->
-        <div class="form-row">
-          <div class="form-group full-width">
-            <label for="goal">Objetivo Principal</label>
-            <textarea id="goal" formControlName="goal" rows="3" placeholder="Ex: Perder peso, melhorar performance, etc."></textarea>
-          </div>
-        </div>
-
-        <!-- Linha 4: Status -->
-        <div class="form-row">
+      <div class="form-card">
+        <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
+          <!-- Linha 1: Nome e Email -->
+          <div class="form-row">
             <div class="form-group">
-                <label for="status">Status</label>
-                <select id="status" formControlName="status">
-                  <option value="active">Ativo</option>
-                  <option value="inactive">Inativo</option>
-                </select>
-              </div>
-        </div>
+              <label for="name">Nome Completo</label>
+              <input id="name" type="text" formControlName="name" placeholder="Digite o nome do paciente">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" type="email" formControlName="email" placeholder="exemplo@email.com">
+            </div>
+          </div>
 
-        <!-- Ações do Formulário -->
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" (click)="goBack()">Cancelar</button>
-          <button type="submit" class="btn-primary" [disabled]="patientForm.invalid">
-            {{ isEditMode ? 'Salvar Alterações' : 'Adicionar Paciente' }}
-          </button>
-        </div>
-      </form>
+          <!-- Linha 2: Idade e Telefone -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="age">Idade</label>
+              <input id="age" type="number" formControlName="age" placeholder="Ex: 30">
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefone (Opcional)</label>
+              <input id="phone" type="tel" formControlName="phone" placeholder="(XX) XXXXX-XXXX">
+            </div>
+          </div>
+
+          <!-- Linha 3: Objetivo -->
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="goal">Objetivo Principal</label>
+              <textarea id="goal" formControlName="goal" rows="3" placeholder="Ex: Perder peso, melhorar performance, etc."></textarea>
+            </div>
+          </div>
+
+          <!-- Linha 4: Status -->
+          <div class="form-row">
+              <div class="form-group">
+                  <label for="status">Status</label>
+                  <select id="status" formControlName="status">
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
+                  </select>
+                </div>
+          </div>
+
+          <!-- Ações do Formulário -->
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" (click)="goBack()">Cancelar</button>
+            <button type="submit" class="btn-primary" [disabled]="patientForm.invalid">
+              {{ isEditMode ? 'Salvar Alterações' : 'Adicionar Paciente' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</app-dashboard-layout>
+  </app-dashboard-layout>
+</ng-container>

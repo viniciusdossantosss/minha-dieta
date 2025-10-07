@@ -4,14 +4,10 @@ import { CommonModule } from '@angular/common';
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
 import { Patient } from '../../models/patient.model';
 import { PatientService } from '../../services/patient.service';
-
-interface UserProfile {
-  id: number; // ID do nutricionista
-  name: string;
-  type: 'nutritionist' | 'patient';
-  avatar?: string;
-  email?: string;
-}
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
+import { DietPlansApiService } from '../../services/diet-plans-api.service'; // Importar DietPlansApiService
+import { DietPlan } from '../../models/diet.model'; // Importar DietPlan
 
 interface Stats {
   totalPatients: number;
@@ -27,38 +23,49 @@ interface Stats {
   styleUrls: ['./nutritionist-dashboard.component.css']
 })
 export class NutritionistDashboardComponent implements OnInit {
-  // Simula um perfil de nutricionista logado
-  userProfile: UserProfile = {
-    id: 1, 
-    name: 'Juliana Sobral',
-    type: 'nutritionist',
-    avatar: '/assets/default-avatar.png',
-    email: 'juliana@minhadieta.com'
-  };
+  userProfile: User | null = null;
 
   stats: Stats = {
-    totalPatients: 0, // Será atualizado dinamicamente
-    totalMenus: 28,
-    weeklyActivity: 85
+    totalPatients: 0,
+    totalMenus: 28, // Valor estático por enquanto
+    weeklyActivity: 85 // Valor estático por enquanto
   };
 
   recentPatients: Patient[] = [];
+  dietPlans: DietPlan[] = []; // Adicionar propriedade para planos de dieta
 
-  constructor(private router: Router, private patientService: PatientService) {}
+  constructor(
+    private router: Router,
+    private patientService: PatientService,
+    private authService: AuthService,
+    private dietPlansApiService: DietPlansApiService // Injetar DietPlansApiService
+  ) {}
 
   ngOnInit(): void {
-    this.loadDashboardData();
+    this.authService.getCurrentUser().subscribe(user => {
+      if (user && user.userType === 'nutritionist') {
+        this.userProfile = user;
+        this.loadDashboardData(user.id);
+      } else {
+        // Opcional: redirecionar se não for nutricionista
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
-  loadDashboardData(): void {
-    // Carrega apenas os pacientes do nutricionista logado
-    this.patientService.getPatients(this.userProfile.id).subscribe(patients => {
-      // Pega os 4 pacientes mais recentes baseados na data de atualização
+  loadDashboardData(nutritionistId: number): void {
+    this.patientService.getPatients(nutritionistId).subscribe(patients => {
       this.recentPatients = [...patients]
-        .sort((a, b) => b.lastUpdate.getTime() - a.lastUpdate.getTime())
+        .sort((a, b) => new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())
         .slice(0, 4);
       
       this.stats.totalPatients = patients.length;
+    });
+
+    this.dietPlansApiService.getDietPlansByNutritionist().subscribe((dietPlans: DietPlan[]) => {
+      this.dietPlans = dietPlans;
+      this.stats.totalMenus = dietPlans.length; // Atualiza o total de menus
+      // Lógica para weeklyActivity pode ser adicionada aqui se houver dados relevantes nos planos de dieta
     });
   }
 
@@ -71,13 +78,10 @@ export class NutritionistDashboardComponent implements OnInit {
   }
 
   viewPatient(patientId: number): void {
-    // Navegar para detalhes do paciente
     this.router.navigate(['/nutritionist/patients', patientId]);
   }
 
   editMenu(patientId: number): void {
-    // Navegar para editar cardápio do paciente
-    // this.router.navigate(['/nutritionist/patients', patientId, 'menu']);
     alert(`Editar cardápio do paciente ${patientId}`);
   }
 

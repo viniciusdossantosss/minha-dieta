@@ -1,15 +1,15 @@
 <div class="side-menu" [class.open]="isOpen">
   <!-- Header do Menu -->
   <div class="menu-header">
-    <div class="user-profile">
+    <div class="user-profile" *ngIf="userProfile">
       <div class="user-avatar">
-        <img [src]="userProfile.avatar || '/assets/default-avatar.png'" 
+        <img [src]="userProfile.photoUrl || '/assets/default-avatar.png'" 
              [alt]="userProfile.name"
              onerror="this.src='/assets/default-avatar.png'">
       </div>
       <div class="user-info">
         <h3 class="user-name">{{ userProfile.name }}</h3>
-        <p class="user-type">{{ userProfile.type === 'nutritionist' ? 'Nutricionista' : 'Paciente' }}</p>
+        <p class="user-type">{{ userProfile.userType === 'nutritionist' ? 'Nutricionista' : 'Paciente' }}</p>
       </div>
     </div>
     
@@ -20,10 +20,10 @@
   </div>
 
   <!-- Navegação -->
-  <nav class="menu-navigation">
+  <nav class="menu-navigation" *ngIf="userProfile">
     <ul class="nav-list">
       <!-- Navegação do Nutricionista -->
-      <ng-container *ngIf="userProfile.type === 'nutritionist'">
+      <ng-container *ngIf="userProfile.userType === 'nutritionist'">
         <li class="nav-item">
           <a href="/nutritionist/dashboard" class="nav-link" [class.active]="isActive('/nutritionist/dashboard')" (click)="closeMenu()">
             <span class="nav-icon">📊</span>
@@ -51,7 +51,7 @@
       </ng-container>
 
       <!-- Navegação do Paciente -->
-      <ng-container *ngIf="userProfile.type === 'patient'">
+      <ng-container *ngIf="userProfile.userType === 'patient'">
         <li class="nav-item">
           <a href="/patient/dashboard" class="nav-link" [class.active]="isActive('/patient/dashboard')" (click)="closeMenu()">
             <span class="nav-icon">📊</span>

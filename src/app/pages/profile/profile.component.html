@@ -1,1 +1,80 @@
-<p>profile works!</p>
+<ng-container *ngIf="userProfile">
+  <app-dashboard-layout [userProfile]="userProfile" pageTitle="Meu Perfil">
+    <div class="profile-container">
+      <div class="profile-card">
+        <div class="profile-header">
+          <img [src]="userProfile.photoUrl || '/assets/default-avatar.png'" alt="Foto de Perfil" class="profile-avatar">
+          <h2>{{ userProfile.name }}</h2>
+          <p class="user-type">{{ userProfile.userType === 'nutritionist' ? 'Nutricionista' : 'Paciente' }}</p>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="name">Nome Completo</label>
+            <input id="name" type="text" formControlName="name" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" formControlName="email" class="form-control" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Telefone</label>
+            <input id="phone" type="tel" formControlName="phone" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="photo">Foto de Perfil</label>
+            <input id="photo" type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control">
+            <div class="error-message" *ngIf="isFieldInvalid('photoUrl')">
+              <span *ngIf="profileForm.get('photoUrl')?.errors?.['pattern']">URL inválida.</span>
+            </div>
+          </div>
+
+          <!-- Campos específicos para Nutricionista -->
+          <ng-container *ngIf="userProfile.userType === 'nutritionist'">
+            <div class="form-group">
+              <label for="crn">CRN</label>
+              <input id="crn" type="text" formControlName="crn" class="form-control">
+            </div>
+          </ng-container>
+
+          <!-- Campos específicos para Paciente -->
+          <ng-container *ngIf="userProfile.userType === 'patient'">
+            <div class="form-group">
+              <label for="age">Idade</label>
+              <input id="age" type="number" formControlName="age" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="weight">Peso (kg)</label>
+              <input id="weight" type="number" formControlName="weight" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="height">Altura (m)</label>
+              <input id="height" type="number" formControlName="height" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="goal">Objetivo</label>
+              <textarea id="goal" formControlName="goal" class="form-control"></textarea>
+            </div>
+          </ng-container>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="profileForm.invalid || isLoading">
+              <span *ngIf="!isLoading">Salvar Alterações</span>
+              <span *ngIf="isLoading">Salvando...</span>
+            </button>
+          </div>
+
+          <div class="general-error" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+          <div class="success-message" *ngIf="successMessage">
+            {{ successMessage }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </app-dashboard-layout>
+</ng-container>
