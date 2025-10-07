@@ -13,6 +13,7 @@ import { PatientFormComponent } from './pages/patient-form/patient-form.componen
 import { MealOptionsComponent } from './pages/meal-options/meal-options.component';
 import { MealOptionFormComponent } from './pages/meal-option-form/meal-option-form.component';
 import { ProfileComponent } from './pages/profile/profile.component'; // Importar ProfileComponent
+import { PatientListComponent } from './pages/patient-list/patient-list.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,6 +21,9 @@ export const routes: Routes = [
   { path: 'register-nutritionist', component: RegisterNutritionistComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'nutritionist/patients', component: PatientListComponent },
+  { path: 'nutritionist/patients/add', component: PatientFormComponent }, // Rota para adicionar paciente
+{ path: 'nutritionist/patients/:id/edit', component: PatientFormComponent }, // Rota para editar paciente
   {
     path: 'nutritionist/dashboard',
     component: NutritionistDashboardComponent,

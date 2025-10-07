@@ -1,0 +1,82 @@
+  <div class="header-section">
+    <h1 class="page-title">Lista de Pacientes</h1>
+    <button mat-raised-button color="primary" (click)="addNewPatient()">
+      <mat-icon>person_add</mat-icon> Adicionar Paciente
+    </button>
+  </div>
+
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div>
+        <mat-form-field appearance="outline" class="full-width-filter">
+          <mat-label>Filtrar pacientes</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ex: Maria" #input>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="mat-elevation-z8">
+          <table mat-table [dataSource]="dataSource" matSort>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
+              <td mat-cell *matCellDef="let patient"> {{patient.name}} </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+              <td mat-cell *matCellDef="let patient"> {{patient.email}} </td>
+            </ng-container>
+
+            <!-- Phone Column -->
+            <ng-container matColumnDef="phone">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefone </th>
+              <td mat-cell *matCellDef="let patient"> {{patient.phone || 'N/A'}} </td>
+            </ng-container>
+
+            <!-- BirthDate Column -->
+            <ng-container matColumnDef="birthDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nascimento </th>
+              <td mat-cell *matCellDef="let patient"> {{patient.birthDate ? (patient.birthDate | date:'dd/MM/yyyy') : 'N/A'}} </td>
+            </ng-container>
+
+            <!-- IsActive Column -->
+            <ng-container matColumnDef="isActive">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+              <td mat-cell *matCellDef="let patient"> {{getStatusText(patient.isActive)}} </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> Ações </th>
+              <td mat-cell *matCellDef="let patient">
+                <button mat-icon-button color="primary" (click)="viewPatientDetails(patient.id)" title="Ver Detalhes">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" (click)="editPatientProfile(patient.id)" title="Editar Perfil">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deletePatient(patient.id)" title="Deletar Paciente">
+                  <mat-icon>delete</mat-icon>
+                </button>
+                <button mat-icon-button (click)="createDietPlan(patient.id)" title="Criar Plano de Dieta">
+                  <mat-icon>assignment</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">Nenhum paciente encontrado com "{{input.value}}"</td>
+            </tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecione a página de pacientes"></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>

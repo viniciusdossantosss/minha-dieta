@@ -1,110 +1,99 @@
-<ng-container *ngIf="userProfile">
-  <app-dashboard-layout 
-    pageTitle="Dashboard Nutricionista"
-    [userProfile]="userProfile">
-    
-    <!-- Welcome Section -->
-    <div class="welcome-section">
-      <h1 class="welcome-title">Olá, {{ userProfile.name }}! </h1>
-      <p class="welcome-subtitle">Aqui está um resumo da sua atividade hoje</p>
-    </div>
+<app-dashboard-layout 
+  pageTitle="Dashboard Nutricionista"
+  [userProfile]="userProfile">
+  
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <h1 class="welcome-title">Olá, {{ userProfile?.name }}! </h1>
+    <p class="welcome-subtitle">Gerencie seus pacientes e planos alimentares.</p>
+  </div>
 
-    <!-- Stats Cards -->
-    <div class="stats-grid">
-      <div class="stat-card patients">
-        <div class="stat-icon">👥</div>
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon"><mat-icon>groups</mat-icon></div>
         <div class="stat-content">
           <h3 class="stat-number">{{ stats.totalPatients }}</h3>
-          <p class="stat-label">Pacientes Ativos</p>
+          <p class="stat-label">Pacientes Cadastrados</p>
         </div>
-      </div>
+      </mat-card-content>
+    </mat-card>
 
-      <div class="stat-card menus">
-        <div class="stat-icon">🍽️</div>
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon"><mat-icon>restaurant_menu</mat-icon></div>
         <div class="stat-content">
-          <h3 class="stat-number">{{ stats.totalMenus }}</h3>
-          <p class="stat-label">Cardápios Criados</p>
+          <h3 class="stat-number">{{ stats.totalDietPlans }}</h3>
+          <p class="stat-label">Planos de Dieta Criados</p>
         </div>
-      </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <h2 class="section-title">Ações Rápidas</h2>
+    <div class="actions-grid">
+      <button mat-raised-button color="primary" class="action-card" (click)="addNewPatient()">
+        <div class="action-icon"><mat-icon>person_add</mat-icon></div>
+        <div class="action-content">
+          <h3>Adicionar Paciente</h3>
+          <p>Cadastrar um novo paciente</p>
+        </div>
+      </button>
+
+      <button mat-raised-button color="accent" class="action-card" (click)="createDietPlan()">
+        <div class="action-icon"><mat-icon>assignment</mat-icon></div>
+        <div class="action-content">
+          <h3>Criar Plano de Dieta</h3>
+          <p>Montar novo plano alimentar</p>
+        </div>
+      </button>
+
+      <button mat-raised-button color="warn" class="action-card" (click)="manageMealOptions()">
+        <div class="action-icon"><mat-icon>fastfood</mat-icon></div>
+        <div class="action-content">
+          <h3>Gerenciar Opções</h3>
+          <p>Criar e editar opções de refeição</p>
+        </div>
+      </button>
     </div>
+  </div>
 
-    <!-- Quick Actions -->
-    <div class="quick-actions-section">
-      <h2 class="section-title">Ações Rápidas</h2>
-      <div class="actions-grid">
-        <button class="action-card primary" (click)="addNewPatient()">
-          <div class="action-icon">➕</div>
-          <div class="action-content">
-            <h3>Adicionar Paciente</h3>
-            <p>Cadastrar um novo paciente</p>
-          </div>
-        </button>
-
-        <button class="action-card secondary" (click)="createMenu()">
-          <div class="action-icon">📝</div>
-          <div class="action-content">
-            <h3>Criar Cardápio</h3>
-            <p>Montar novo cardápio</p>
-          </div>
-        </button>
-
-
-      </div>
+  <!-- Recent Patients -->
+  <div class="recent-patients-section">
+    <div class="section-header">
+      <h2 class="section-title">Pacientes Recentes</h2>
+      <a routerLink="/nutritionist/patients" class="view-all-link">Ver todos</a>
     </div>
-
-    <!-- Recent Patients -->
-    <div class="recent-patients-section">
-      <div class="section-header">
-        <h2 class="section-title">Pacientes Recentes</h2>
-        <a href="/nutritionist/patients" class="view-all-link">Ver todos</a>
-      </div>
-      
-      <div class="patients-list">
-        <div class="patient-card" *ngFor="let patient of recentPatients">
-          <div class="patient-avatar">
+    
+    <div class="patients-list" *ngIf="recentPatients.length > 0">
+      <mat-card *ngFor="let patient of recentPatients" class="patient-card">
+        <mat-card-header>
+          <div mat-card-avatar class="patient-avatar">
             <img [src]="patient.photoUrl || '/assets/default-avatar.png'" 
                  [alt]="patient.name"
                  onerror="this.src='/assets/default-avatar.png'">
           </div>
-          <div class="patient-info">
-            <h4 class="patient-name">{{ patient.name }}</h4>
-            <p class="patient-age">{{ patient.age }} anos</p>
-            <p class="patient-status" [class]="patient.status">
-              {{ getStatusText(patient.status) }}
-            </p>
-          </div>
-          <div class="patient-actions">
-            <button class="btn-icon" (click)="viewPatient(patient.id)" title="Ver detalhes">
-              👁️
-            </button>
-            <button class="btn-icon" (click)="editMenu(patient.id)" title="Editar cardápio">
-              ✏️
-            </button>
-          </div>
-        </div>
-      </div>
+          <mat-card-title>{{ patient.name }}</mat-card-title>
+          <mat-card-subtitle>{{ patient.email }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p><strong>Telefone:</strong> {{ patient.phone || 'Não informado' }}</p>
+          <p><strong>Nascimento:</strong> {{ patient.birthDate ? (patient.birthDate | date:'dd/MM/yyyy') : 'Não informado' }}</p>
+          <p><strong>Status:</strong> {{ getStatusText(patient.isActive) }}</p>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="viewPatientDetails(patient.id)">Ver Detalhes</button>
+          <button mat-button color="accent" (click)="editPatientProfile(patient.id)">Editar Perfil</button>
+        </mat-card-actions>
+      </mat-card>
     </div>
 
-    <!-- Diet Plans Section -->
-    <div class="diet-plans-section">
-      <div class="section-header">
-        <h2 class="section-title">Planos de Dieta</h2>
-        <a href="/nutritionist/diet-plans" class="view-all-link">Ver todos</a>
-      </div>
-      <div class="diet-plans-list">
-        <div *ngIf="dietPlans.length === 0" class="no-diet-plans">
-          <p>Nenhum plano de dieta para exibir.</p>
-        </div>
-        <div *ngFor="let plan of dietPlans" class="diet-plan-item">
-          <h3>Plano para {{ plan.patient?.name }}</h3>
-          <p>Data: {{ plan.date | date }}</p>
-          <p>Tipo de Refeição: {{ plan.mealType }}</p>
-          <p>Opções de Refeição: <span *ngFor="let mealOption of plan.mealOptions">{{ mealOption.name }} </span></p>
-          <p>Notas: {{ plan.notes }}</p>
-        </div>
-      </div>
+    <div *ngIf="recentPatients.length === 0" class="no-patients-message">
+      <p>Nenhum paciente recente para exibir.</p>
     </div>
+  </div>
 
-  </app-dashboard-layout>
-</ng-container>
+</app-dashboard-layout>

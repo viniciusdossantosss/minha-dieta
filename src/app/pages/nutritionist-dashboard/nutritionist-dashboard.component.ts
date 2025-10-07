@@ -1,91 +1,113 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { Observable, of, forkJoin, Subscription } from 'rxjs'; // Importar Subscription
+import { map } from 'rxjs/operators';
+
+// Angular Material Imports
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+
+// Shared Components and Services
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
-import { Patient } from '../../models/patient.model';
 import { PatientService } from '../../services/patient.service';
 import { AuthService } from '../../services/auth.service';
-import { User } from '../../models/user.model';
-import { DietPlansApiService } from '../../services/diet-plans-api.service'; // Importar DietPlansApiService
-import { DietPlan } from '../../models/diet.model'; // Importar DietPlan
+import { DietPlansApiService } from '../../services/diet-plans-api.service';
 
-interface Stats {
+// Models
+import { Patient } from '../../models/patient.model';
+import { User } from '../../models/user.model';
+
+interface DashboardStats {
   totalPatients: number;
-  totalMenus: number;
-  weeklyActivity: number;
+  totalDietPlans: number;
 }
 
 @Component({
   selector: 'app-nutritionist-dashboard',
   standalone: true,
-  imports: [CommonModule, DashboardLayoutComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    DashboardLayoutComponent,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+  ],
   templateUrl: './nutritionist-dashboard.component.html',
-  styleUrls: ['./nutritionist-dashboard.component.css']
+  styleUrls: ['./nutritionist-dashboard.component.css'],
 })
 export class NutritionistDashboardComponent implements OnInit {
   userProfile: User | null = null;
-
-  stats: Stats = {
-    totalPatients: 0,
-    totalMenus: 28, // Valor estático por enquanto
-    weeklyActivity: 85 // Valor estático por enquanto
-  };
-
+  stats: DashboardStats = { totalPatients: 0, totalDietPlans: 0 };
   recentPatients: Patient[] = [];
-  dietPlans: DietPlan[] = []; // Adicionar propriedade para planos de dieta
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
-    private router: Router,
     private patientService: PatientService,
     private authService: AuthService,
-    private dietPlansApiService: DietPlansApiService // Injetar DietPlansApiService
+    private dietPlansApiService: DietPlansApiService, // Corrigido para DietPlansApiService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe(user => {
+    this.subscriptions.add(this.authService.getCurrentUser().subscribe((user) => {
       if (user && user.userType === 'nutritionist') {
         this.userProfile = user;
         this.loadDashboardData(user.id);
       } else {
-        // Opcional: redirecionar se não for nutricionista
+        console.error('Usuário não é um nutricionista ou não está logado.');
         this.router.navigate(['/login']);
       }
-    });
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   loadDashboardData(nutritionistId: number): void {
-    this.patientService.getPatients(nutritionistId).subscribe(patients => {
-      this.recentPatients = [...patients]
-        .sort((a, b) => new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime())
-        .slice(0, 4);
-      
-      this.stats.totalPatients = patients.length;
-    });
+    const patients$ = this.patientService.getPatients(nutritionistId);
+    const dietPlans$ = this.dietPlansApiService.getDietPlansByNutritionist();
 
-    this.dietPlansApiService.getDietPlansByNutritionist().subscribe((dietPlans: DietPlan[]) => {
-      this.dietPlans = dietPlans;
-      this.stats.totalMenus = dietPlans.length; // Atualiza o total de menus
-      // Lógica para weeklyActivity pode ser adicionada aqui se houver dados relevantes nos planos de dieta
-    });
+    this.subscriptions.add(forkJoin([patients$, dietPlans$]).pipe(
+      map(([patients, dietPlans]) => ({
+        totalPatients: patients.length,
+        totalDietPlans: dietPlans.length,
+      }))
+    ).subscribe(stats => {
+      this.stats = stats;
+    }));
+
+    this.subscriptions.add(patients$.pipe(
+      map((patients) => patients.sort((a, b) => new Date(b.lastUpdate).getTime() - new Date(a.lastUpdate).getTime()).slice(0, 3))
+    ).subscribe(recentPatients => {
+      this.recentPatients = recentPatients;
+    }));
   }
 
   addNewPatient(): void {
     this.router.navigate(['/nutritionist/patients/add']);
   }
 
-  createMenu(): void {
-    this.router.navigate(['/nutritionist/meal-options/add']);
+  createDietPlan(): void {
+    this.router.navigate(['/nutritionist/diet-plans/create']);
   }
 
-  viewPatient(patientId: number): void {
+  manageMealOptions(): void {
+    this.router.navigate(['/nutritionist/meal-options']);
+  }
+
+  viewPatientDetails(patientId: number): void {
     this.router.navigate(['/nutritionist/patients', patientId]);
   }
 
-  editMenu(patientId: number): void {
-    alert(`Editar cardápio do paciente ${patientId}`);
+  editPatientProfile(patientId: number): void {
+    this.router.navigate(['/nutritionist/patients', patientId, 'edit']);
   }
 
-  getStatusText(status: 'active' | 'inactive'): string {
-    return status === 'active' ? 'Ativo' : 'Inativo';
+  getStatusText(isActive: boolean): string {
+    return isActive ? 'Ativo' : 'Inativo';
   }
 }

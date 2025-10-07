@@ -10,6 +10,8 @@ export interface Patient {
   phone?: string;
   goal?: string;
   nutritionistId: number;
+  birthDate?: Date; // Adicionado
+  isActive: boolean; // Adicionado
   // Adicionar campos que existem na entidade Patient do backend
   weight?: number;
   height?: number;

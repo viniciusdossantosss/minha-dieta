@@ -1,0 +1,101 @@
+/* patient-list.component.css */
+
+:host {
+  display: block;
+  padding: 1.5rem;
+  background-color: var(--body-background);
+}
+
+.patient-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: var(--font-size-h1);
+  font-weight: bold;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.table-card {
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.full-width-filter {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.mat-elevation-z8 {
+  box-shadow: none; /* Remove a sombra padrão da tabela para usar a do card */
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-actions {
+  width: 150px; /* Largura fixa para as ações */
+  text-align: center;
+}
+
+.mat-column-isActive {
+  width: 80px;
+}
+
+.mat-column-birthDate {
+  width: 120px;
+}
+
+/* Estilos para botões do Angular Material para harmonizar com o tema */
+.mat-raised-button.mat-primary {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+}
+
+.mat-raised-button.mat-primary:hover {
+  background-color: var(--primary-color-light);
+}
+
+.mat-icon-button.mat-primary {
+  color: var(--primary-color);
+}
+
+.mat-icon-button.mat-accent {
+  color: var(--primary-color); /* Usar primary para accent também, se desejar */
+}
+
+.mat-icon-button.mat-warn {
+  color: #f44336; /* Cor de aviso */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .header-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .page-title {
+    font-size: var(--font-size-h2);
+  }
+
+  .mat-mdc-table {
+    overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+  }
+
+  .mat-mdc-table .mat-column-actions {
+    min-width: 120px;
+  }
+}
