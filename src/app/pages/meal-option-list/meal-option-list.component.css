@@ -1,0 +1,116 @@
+/* meal-option-list.component.css */
+
+:host {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: var(--body-background);
+  }
+  
+  mat-card {
+    width: 100%;
+    max-width: 1200px;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .page-title {
+    font-size: var(--font-size-h2);
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+  }
+  
+  .mat-mdc-table {
+    width: 100%;
+    min-width: 600px; /* Garante que a tabela não fique muito pequena em telas menores */
+  }
+  
+  .mat-mdc-header-cell {
+    font-weight: bold;
+    color: var(--text-color-dark);
+    background-color: var(--table-header-background);
+  }
+  
+  .mat-mdc-cell {
+    color: var(--text-color);
+  }
+  
+  .item-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .item-list li {
+    font-size: 0.85rem;
+    color: var(--text-color-secondary);
+  }
+  
+  .mat-column-actions {
+    width: 120px;
+    text-align: center;
+  }
+  
+  .mat-icon-button {
+    margin: 0 4px;
+  }
+  
+  .mat-raised-button.mat-primary {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+  }
+  
+  .mat-raised-button.mat-primary:hover {
+    background-color: var(--primary-color-light);
+  }
+  
+  .mat-icon-button.mat-primary {
+    color: var(--primary-color);
+  }
+  
+  .mat-icon-button.mat-warn {
+    color: #f44336; /* Cor de aviso */
+  }
+  
+  .mat-row.mat-no-data-row {
+    text-align: center;
+    font-style: italic;
+    color: var(--text-color-secondary);
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .header-section {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .page-title {
+      font-size: var(--font-size-h2);
+    }
+  
+    .mat-mdc-table {
+      overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+    }
+  
+    .mat-mdc-table .mat-column-actions {
+      min-width: 120px;
+    }
+  }
+  

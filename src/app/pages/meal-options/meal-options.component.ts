@@ -76,7 +76,7 @@ export class MealOptionsComponent implements OnInit {
 
   deleteMeal(id: number): void {
     if (confirm('Tem certeza que deseja excluir esta opção de refeição?') && this.patientId) {
-      this.mealService.deleteMealOption(id, this.patientId).subscribe(() => {
+      this.mealService.deleteMealOption(id).subscribe(() => {
         this.loadMeals();
       });
     }

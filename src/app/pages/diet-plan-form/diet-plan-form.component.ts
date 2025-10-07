@@ -5,7 +5,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription, Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-// Angular Material Imports
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,11 +17,11 @@ import { MatIconModule } from '@angular/material/icon';
 // Services
 import { DietPlansApiService } from '../../services/diet-plans-api.service';
 import { PatientService } from '../../services/patient.service';
-import { MealOptionsApiService } from '../../services/meal-options-api.service'; // Usar MealOptionsApiService
+import { MealOptionsApiService } from '../../services/meal-options-api.service';
 import { AuthService } from '../../services/auth.service';
 
 // Models
-import { DietPlan } from '../../models/diet.model'; // Importar DietPlan do modelo correto
+import { DietPlan, CreateUpdateDietPlanDto } from '../../models/diet.model';
 import { Patient } from '../../models/patient.model';
 import { MealOption, MealType } from '../../models/meal.model';
 
@@ -146,7 +145,7 @@ export class DietPlanFormComponent implements OnInit, OnDestroy {
       const formValue = this.dietPlanForm.value;
       const dietPlanData: CreateUpdateDietPlanDto = {
         patientId: formValue.patientId,
-        date: formValue.date.toISOString().split('T')[0], // Formata para 'YYYY-MM-DD'
+        date: formValue.date, // Usar Date para alinhar com o serviço
         mealOptions: formValue.mealPlanEntries.map((entry: MealPlanEntry) => ({ id: entry.mealOptionId as number })),
         mealType: formValue.mealPlanEntries[0]?.mealType, // Assumindo que o primeiro entry define o mealType principal
         notes: formValue.mealPlanEntries.map((entry: MealPlanEntry) => entry.notes).filter(Boolean).join('; '),

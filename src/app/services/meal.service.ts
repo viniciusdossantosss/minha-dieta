@@ -29,14 +29,12 @@ export class MealService {
   addMealOption(mealData: Omit<MealOption, 'id'>): Observable<MealOption> {
     return this.http.post<MealOption>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}`, mealData);
   }
-
   updateMealOption(updatedOption: MealOption): Observable<MealOption> {
     const params = new HttpParams().set('patientId', updatedOption.patientId.toString());
     return this.http.put<MealOption>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}/${updatedOption.id}`, updatedOption, { params });
   }
 
-  deleteMealOption(id: number, patientId: number): Observable<void> {
-    const params = new HttpParams().set('patientId', patientId.toString());
-    return this.http.delete<void>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}/${id}`, { params });
+  deleteMealOption(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}/${id}`);
   }
 }

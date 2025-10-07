@@ -41,7 +41,7 @@ export interface DietPlan {
 // DTO para criação e atualização de planos de dieta
 export interface CreateUpdateDietPlanDto {
   patientId: number;
-  date: string; // Formato YYYY-MM-DD
+  date: Date; // Usar Date para alinhar com o serviço
   mealType: MealType;
   mealOptions: { id: number }[]; // IDs das opções de refeição
   notes?: string;
