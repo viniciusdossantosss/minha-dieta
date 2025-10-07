@@ -14,9 +14,12 @@ import { MealOptionsComponent } from './pages/meal-options/meal-options.componen
 import { MealOptionFormComponent } from './pages/meal-option-form/meal-option-form.component';
 import { ProfileComponent } from './pages/profile/profile.component'; // Importar ProfileComponent
 import { PatientListComponent } from './pages/patient-list/patient-list.component';
+import { DietPlanFormComponent } from './pages/diet-plan-form/diet-plan-form.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'nutritionist/diet-plans/create', component: DietPlanFormComponent }, // Rota para criar plano de dieta
+  { path: 'nutritionist/diet-plans/:id/edit', component: DietPlanFormComponent }, // Rota para editar plano de dieta
   { path: 'login', component: LoginComponent },
   { path: 'register-nutritionist', component: RegisterNutritionistComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },

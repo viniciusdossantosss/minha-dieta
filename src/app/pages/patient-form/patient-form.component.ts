@@ -1,98 +1,160 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
+import { Subscription } from 'rxjs';
+
+// Angular Material Imports
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
+// Services
 import { PatientService } from '../../services/patient.service';
-import { Patient } from '../../models/patient.model';
 import { AuthService } from '../../services/auth.service';
+
+// Models
+import { Patient } from '../../models/patient.model';
 import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-patient-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, DashboardLayoutComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
   templateUrl: './patient-form.component.html',
-  styleUrls: ['./patient-form.component.css']
+  styleUrls: ['./patient-form.component.css'],
 })
-export class PatientFormComponent implements OnInit {
-  patientForm!: FormGroup; // Usar definite assignment assertion
-  isEditMode = false;
-  pageTitle = 'Adicionar Novo Paciente';
-  private patientId: number | null = null;
-
-  userProfile: User | null = null; // Corrigido
+export class PatientFormComponent implements OnInit, OnDestroy {
+  patientForm!: FormGroup;
+  isEditMode: boolean = false;
+  patientId: number | null = null;
+  nutritionistId: number | null = null;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
     private patientService: PatientService,
+    private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
-    private authService: AuthService // Injetado
-  ) {
-    // A inicialização do formulário será feita em ngOnInit após obter o userProfile
-  }
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.authService.getCurrentUser().subscribe(user => {
+    this.initForm();
+    this.subscriptions.add(this.authService.getCurrentUser().subscribe(user => {
       if (user && user.userType === 'nutritionist') {
-        this.userProfile = user;
-        this.initializeForm(user.id); // Inicializa o formulário com o ID do nutricionista
-        this.loadPatientData(); // Carrega dados do paciente se estiver em modo de edição
+        this.nutritionistId = user.id;
+        this.subscriptions.add(this.route.paramMap.subscribe(params => {
+          const id = params.get('id');
+          if (id) {
+            this.patientId = +id;
+            this.isEditMode = true;
+            if (this.nutritionistId) {
+              this.loadPatientData(this.patientId, this.nutritionistId);
+            }
+          }
+        }));
       } else {
-        // Redirecionar se não for nutricionista
+        console.error('Usuário não é um nutricionista ou não está logado.');
         this.router.navigate(['/login']);
       }
-    });
+    }));
   }
 
-  initializeForm(nutritionistId: number): void {
+  initForm(): void {
     this.patientForm = this.fb.group({
-      id: [null],
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      age: ['', [Validators.required, Validators.min(1)]],
       phone: [''],
-      goal: ['', Validators.required],
-      status: ['active', Validators.required],
-      nutritionistId: [nutritionistId] // Adiciona o nutritionistId ao formulário
+      birthDate: [null],
+      weight: [null],
+      height: [null],
+      gender: [''],
+      medicalHistory: [''],
+      allergies: [''],
+      dietaryRestrictions: [''],
+      isActive: [true, Validators.required],
     });
   }
 
-  loadPatientData(): void {
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id && this.userProfile) {
-        this.isEditMode = true;
-        this.patientId = +id;
-        this.pageTitle = 'Editar Paciente';
-        // Passa o nutritionistId para getPatientById
-        this.patientService.getPatientById(this.patientId, this.userProfile.id).subscribe(patient => {
-          if (patient) {
-            this.patientForm.patchValue(patient);
-          }
-        });
-      }
-    });
+  loadPatientData(id: number, nutritionistId: number): void {
+    this.subscriptions.add(this.patientService.getPatientById(id, nutritionistId).subscribe(patient => {
+      this.patientForm.patchValue({
+        name: patient.name,
+        email: patient.email,
+        phone: patient.phone,
+        birthDate: patient.birthDate ? new Date(patient.birthDate) : null, // Converte string para Date
+        weight: patient.weight,
+        height: patient.height,
+        gender: patient.gender,
+        medicalHistory: patient.medicalHistory,
+        allergies: patient.allergies,
+        dietaryRestrictions: patient.dietaryRestrictions,
+        isActive: patient.isActive,
+      });
+    }));
   }
 
   onSubmit(): void {
-    if (this.patientForm.valid && this.userProfile) {
-      const formData = this.patientForm.value;
+    if (this.patientForm.valid && this.nutritionistId !== null) {
+      const patientData = { ...this.patientForm.value, nutritionistId: this.nutritionistId };
+
+      // Formata a data de nascimento para o backend (ISO string)
+      if (patientData.birthDate) {
+        patientData.birthDate = new Date(patientData.birthDate).toISOString().split('T')[0]; // Backend espera string 'YYYY-MM-DD'
+      }
 
       if (this.isEditMode && this.patientId) {
-        this.patientService.updatePatient({ ...formData, id: this.patientId }, this.patientId, this.userProfile.id).subscribe(() => {
+        // Para updatePatient, ainda usamos FormData para suportar upload de foto
+        const formData = new FormData();
+        for (const key in patientData) {
+          if (patientData.hasOwnProperty(key) && patientData[key] !== null) {
+            formData.append(key, patientData[key]);
+          }
+        }
+        // nutritionistId já está no patientData, que foi adicionado ao formData
+
+        this.subscriptions.add(this.patientService.updatePatient(formData, this.patientId, this.nutritionistId).subscribe(() => {
+          alert('Paciente atualizado com sucesso!');
           this.router.navigate(['/nutritionist/patients']);
-        });
+        }, error => {
+          console.error('Erro ao atualizar paciente:', error);
+          alert('Erro ao atualizar paciente.');
+        }));
       } else {
-        this.patientService.addPatient({ ...formData, nutritionistId: this.userProfile.id }).subscribe(() => {
+        // Para addPatient, passamos um objeto simples
+        this.subscriptions.add(this.patientService.addPatient(patientData).subscribe(() => {
+          alert('Paciente adicionado com sucesso!');
           this.router.navigate(['/nutritionist/patients']);
-        });
+        }, error => {
+          console.error('Erro ao adicionar paciente:', error);
+          alert('Erro ao adicionar paciente.');
+        }));
       }
+    } else {
+      alert('Por favor, preencha todos os campos obrigatórios.');
     }
   }
 
-  goBack(): void {
+  onCancel(): void {
     this.router.navigate(['/nutritionist/patients']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 }

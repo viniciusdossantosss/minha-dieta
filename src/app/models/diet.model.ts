@@ -37,3 +37,14 @@ export interface DietPlan {
   nutritionist?: User;
   mealOptions: MealOption[];
 }
+
+// DTO para criação e atualização de planos de dieta
+export interface CreateUpdateDietPlanDto {
+  patientId: number;
+  date: string; // Formato YYYY-MM-DD
+  mealType: MealType;
+  mealOptions: { id: number }[]; // IDs das opções de refeição
+  notes?: string;
+  completed?: boolean;
+  nutritionistId: number;
+}
