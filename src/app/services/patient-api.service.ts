@@ -30,5 +30,14 @@ export class PatientApiService {
     );
   }
 
+  getPatients(): Observable<Patient[]> {
+    return this.http.get<Patient[]>(this.baseUrl).pipe(
+      catchError(error => {
+        console.error('Erro ao buscar pacientes:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   // Adicione outros métodos conforme necessário (create, update, delete)
 }

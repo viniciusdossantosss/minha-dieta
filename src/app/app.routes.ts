@@ -25,6 +25,7 @@ export const routes: Routes = [
   { path: 'register-nutritionist', component: RegisterNutritionistComponent },
   { path: 'terms-of-service', component: TermsOfServiceComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'patient/dashboard', component: PatientDashboardComponent },
   { path: 'nutritionist/patients', component: PatientListComponent },
   { path: 'nutritionist/meal-options', component: MealOptionListComponent }, // Rota para listar
   { path: 'nutritionist/meal-options/add', component: MealOptionFormComponent }, // Rota para adicionar

@@ -12,7 +12,7 @@ import { Observable, of } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { DietPlansApiService } from '../../services/diet-plans-api.service'; // Novo
-import { DailyMealChoiceApiService } from '../../services/daily-meal-choice-api.service'; // Novo
+import { DailyMealChoiceService } from '../../services/daily-meal-choice-api.service'; // Novo
 import { MealOptionsApiService } from '../../services/meal-options-api.service'; // Novo
 import { PatientApiService } from '../../services/patient-api.service'; // Novo
 
@@ -46,7 +46,7 @@ export class PatientDetailComponent implements OnInit {
     private router: Router,
     private patientApiService: PatientApiService, // Novo
     private dietPlansApiService: DietPlansApiService, // Novo
-    private dailyMealChoiceApiService: DailyMealChoiceApiService, // Novo
+    private dailyMealChoiceApiService: DailyMealChoiceService, // Novo
     private mealOptionsApiService: MealOptionsApiService, // Novo
     private authService: AuthService
   ) {}
@@ -119,12 +119,13 @@ export class PatientDetailComponent implements OnInit {
     if (!this.lastClickedSlot || !this.dataSubject.value?.patient) return;
 
     const createDailyMealChoiceDto = {
-      date: this.formatDate(this.lastClickedSlot.date),
+      date: this.lastClickedSlot.date,
       mealType: this.lastClickedSlot.mealType,
       mealOptionId: selectedMeal.id!,
+      patientId: this.currentPatientId!
     };
 
-    this.dailyMealChoiceApiService.createOrUpdateDailyMealChoice(createDailyMealChoiceDto).subscribe(() => {
+    this.dailyMealChoiceApiService.addDailyMealChoice(createDailyMealChoiceDto).subscribe(() => {
       if (this.userProfile && this.currentPatientId) {
         this.loadData(this.currentPatientId, this.userProfile.id);
       }

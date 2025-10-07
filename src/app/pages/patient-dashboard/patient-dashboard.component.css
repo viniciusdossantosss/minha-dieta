@@ -1,184 +1,151 @@
-/* Welcome Section */
+/* patient-dashboard.component.css */
+
+:host {
+  display: block;
+  padding: 1.5rem;
+  background-color: var(--body-background);
+}
+
 .welcome-section {
-  margin-bottom: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .welcome-title {
-  font-size: 2rem;
-  font-weight: bold;
+  font-size: var(--font-size-h1);
   color: var(--text-color);
+  margin-bottom: 0.5rem;
 }
 
 .welcome-subtitle {
-  font-size: 1.1rem;
-  color: var(--secondary-text);
+  font-size: var(--font-size-p);
+  color: var(--text-color-secondary);
 }
 
-/* Título Padrão de Seção */
-.section-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--text-color);
-  margin-bottom: 1.5rem;
-}
-
-/* Refeições de Hoje */
-.today-section {
-  margin-bottom: 2.5rem;
-}
-
-.today-meals {
+.weekly-plan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: 120px repeat(7, 1fr); /* Coluna para tipo de refeição + 7 dias */
+  gap: 0.5rem;
+  margin-top: 2rem;
+  overflow-x: auto; /* Permite rolagem horizontal em telas menores */
 }
 
-.meal-card {
-  background-color: var(--card-background);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
+.grid-header,
+.grid-row {
+  display: contents; /* Faz com que os filhos se comportem como itens do grid */
 }
 
-.meal-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.meal-icon {
-  font-size: 1.5rem;
-}
-
-.meal-name {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.selected-option h4 {
-  color: var(--primary-color);
-  font-size: 1rem;
+.meal-type-label {
   font-weight: bold;
-  margin: 0 0 0.5rem 0;
-}
-
-.ingredients-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1rem 0;
-  color: var(--secondary-text);
-  font-size: 0.9rem;
-}
-
-.no-selection p {
-  color: var(--secondary-text);
-  margin: 0 0 1rem 0;
-}
-
-.btn-select {
-  /* Estilo de botão secundário */
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-  background-color: transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-select:hover {
-    background-color: var(--primary-color-light);
-    color: var(--text-color-light);
-    border-color: var(--primary-color-light);
-}
-
-/* Planejador Semanal */
-.weekly-planner-section {
+  padding: 0.75rem;
   background-color: var(--card-background);
-  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
-}
-
-.week-navigation {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.week-nav-btn {
-  background: none;
-  border: 1px solid var(--border-color);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: var(--secondary-text);
-}
-
-.week-display {
-  font-weight: 600;
-  font-size: 1.1rem;
-}
-
-.days-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 1rem;
+  text-align: center;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  grid-column: 1; /* Fixa na primeira coluna */
 }
 
 .day-header {
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.day-date {
-  font-size: 0.9rem;
-  color: var(--secondary-text);
-}
-
-.meal-slot {
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  font-weight: bold;
   padding: 0.75rem;
-  min-height: 100px;
-  cursor: pointer;
-  transition: box-shadow 0.2s;
+  background-color: var(--primary-color-light);
+  color: var(--primary-color-dark);
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 0.9rem;
 }
 
-.meal-slot:hover {
-  box-shadow: 0 0 0 2px var(--primary-color-light);
+.day-header.today {
+  background-color: var(--primary-color);
+  color: var(--text-color-light);
+  box-shadow: var(--box-shadow-medium);
 }
 
-.meal-slot-header {
+.meal-cell {
+  padding: 0.25rem;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--secondary-text);
-  margin-bottom: 0.5rem;
 }
 
-.selected-meal h4 {
+.meal-card {
+  width: 100%;
+  min-height: 100px; /* Altura mínima para os cards de refeição */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--border-color);
+  box-shadow: none; /* Remover sombra padrão do mat-card */
+}
+
+.meal-card:hover {
+  box-shadow: var(--box-shadow-small);
+  transform: translateY(-2px);
+}
+
+.meal-card.selected-meal {
+  border-color: var(--accent-color);
+  background-color: var(--accent-color-light);
+}
+
+.meal-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+}
+
+.meal-details {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.no-meal-text {
+  font-style: italic;
+  color: var(--text-color-secondary);
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--primary-color);
   margin: 0;
 }
 
-.empty-meal {
-  text-align: center;
-  color: var(--secondary-text);
-  padding-top: 1rem;
+.no-meal-text-small {
+  font-size: 0.75rem;
+  color: var(--text-color-tertiary);
+  margin-top: 0.2rem;
 }
 
-.plus-icon {
-  font-size: 1.5rem;
-  color: var(--primary-color);
+/* Responsividade */
+@media (max-width: 768px) {
+  .weekly-plan-grid {
+    grid-template-columns: 100px repeat(7, 1fr); /* Ajusta a largura da coluna de tipo de refeição */
+    gap: 0.25rem;
+  }
+
+  .meal-type-label,
+  .day-header {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .meal-card {
+    min-height: 80px;
+  }
+
+  .meal-name {
+    font-size: 0.9rem;
+  }
+
+  .meal-details,
+  .no-meal-text,
+  .no-meal-text-small {
+    font-size: 0.7rem;
+  }
 }

@@ -1,26 +1,48 @@
-<app-dashboard-layout [userProfile]="userProfile" pageTitle="Minha Dieta">
-  <div class="patient-dashboard-content">
-    <ng-container *ngIf="data$ | async as data; else loadingOrNotFound">
-      <div class="welcome-message">
-        <h1>Bem-vindo(a), {{ userProfile?.name }}!</h1>
-        <p>Aqui está o seu plano de dieta semanal.</p>
-      </div>
+<app-dashboard-layout 
+  pageTitle="Meu Plano de Refeições"
+  [userProfile]="userProfile">
+  
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <h1 class="welcome-title">Olá, {{ userProfile?.name }}! </h1>
+    <p class="welcome-subtitle">Aqui está seu plano de refeições semanal.</p>
+  </div>
 
-      <div class="diet-plan-section">
-        <app-calendar-week
-          [startDate]="startDate"
-          [weeklyDietSchedule]="data.weeklyDietSchedule"
-          [mealOptions]="data.mealOptions"
-          (slotClick)="onSlotClicked($event)"
-        ></app-calendar-week>
+  <!-- Weekly Meal Plan Grid -->
+  <div class="weekly-plan-grid">
+    <!-- Header com os dias da semana -->
+    <div class="grid-header">
+      <div class="meal-type-label"></div> <!-- Canto superior esquerdo vazio -->
+      <div class="day-header" *ngFor="let day of currentWeek" [class.today]="isToday(day)">
+        <span class="day-name">{{ getFormattedDate(day) }}</span>
+      </div>
+    </div>
+
+    <!-- Linhas para cada tipo de refeição -->
+    <ng-container *ngFor="let mealType of mealTypes">
+      <div class="grid-row">
+        <div class="meal-type-label">{{ mealType }}</div>
+        <div *ngFor="let day of currentWeek" class="meal-slot-wrapper">
+          <ng-container *ngIf="getMealSlot(day, mealType) as mealSlot">
+            <mat-card 
+              class="meal-card"
+              [class.selected-meal]="mealSlot.selectedMeal"
+              (click)="openMealSelector(mealSlot)"
+            >
+              <mat-card-header>
+                <div *ngIf="mealSlot.selectedMeal; else noMealSelected">
+                  <h3 class="meal-name">{{ mealSlot.selectedMeal.name }}</h3>
+                  <p class="meal-details">{{ mealSlot.dietPlan?.notes || 'Escolha da nutricionista' }}</p>
+                </div>
+                <ng-template #noMealSelected>
+                  <h3 class="meal-name">{{ mealType }}</h3>
+                  <p class="meal-details">Nenhuma refeição selecionada</p>
+                </ng-template>
+              </mat-card-header>
+            </mat-card>
+          </ng-container>
+        </div>
       </div>
     </ng-container>
-
-    <ng-template #loadingOrNotFound>
-      <div class="centered-message">
-        <p>Carregando seu plano de dieta...</p>
-      </div>
-    </ng-template>
   </div>
-  <app-meal-selection-modal #mealModal (mealSelected)="onMealSelected($event)"></app-meal-selection-modal>
 </app-dashboard-layout>
