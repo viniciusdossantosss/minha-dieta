@@ -81,6 +81,7 @@ a {
   background-color: var(--card-background);
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
+  border-radius: 6px; /* Garante o arredondamento */
 }
 
 /* 5. Estilos Globais de Formulário */

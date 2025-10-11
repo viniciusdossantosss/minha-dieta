@@ -1,82 +1,98 @@
-  <div class="header-section">
-    <h1 class="page-title">Lista de Pacientes</h1>
-    <button mat-raised-button color="primary" (click)="addNewPatient()">
-      <mat-icon>person_add</mat-icon> Adicionar Paciente
-    </button>
-  </div>
+<app-dashboard-layout pageTitle="Meus Pacientes" [userProfile]="userProfile">
+  <div class="patients-container">
+    <!-- Header com botão de adicionar -->
+    <div class="header-section">
+      <button class="btn btn-primary" (click)="addNewPatient()">
+        Adicionar Paciente
+      </button>
+    </div>
 
-  <mat-card class="table-card">
-    <mat-card-content>
-      <div>
-        <mat-form-field appearance="outline" class="full-width-filter">
-          <mat-label>Filtrar pacientes</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Ex: Maria" #input>
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-
-        <div class="mat-elevation-z8">
-          <table mat-table [dataSource]="dataSource" matSort>
-
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nome </th>
-              <td mat-cell *matCellDef="let patient"> {{patient.name}} </td>
-            </ng-container>
-
-            <!-- Email Column -->
-            <ng-container matColumnDef="email">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
-              <td mat-cell *matCellDef="let patient"> {{patient.email}} </td>
-            </ng-container>
-
-            <!-- Phone Column -->
-            <ng-container matColumnDef="phone">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Telefone </th>
-              <td mat-cell *matCellDef="let patient"> {{patient.phone || 'N/A'}} </td>
-            </ng-container>
-
-            <!-- BirthDate Column -->
-            <ng-container matColumnDef="birthDate">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Nascimento </th>
-              <td mat-cell *matCellDef="let patient"> {{patient.birthDate ? (patient.birthDate | date:'dd/MM/yyyy') : 'N/A'}} </td>
-            </ng-container>
-
-            <!-- IsActive Column -->
-            <ng-container matColumnDef="isActive">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-              <td mat-cell *matCellDef="let patient"> {{getStatusText(patient.isActive)}} </td>
-            </ng-container>
-
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef> Ações </th>
-              <td mat-cell *matCellDef="let patient">
-                <button mat-icon-button color="primary" (click)="viewPatientDetails(patient.id)" title="Ver Detalhes">
-                  <mat-icon>visibility</mat-icon>
-                </button>
-                <button mat-icon-button color="accent" (click)="editPatientProfile(patient.id)" title="Editar Perfil">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="warn" (click)="deletePatient(patient.id)" title="Deletar Paciente">
-                  <mat-icon>delete</mat-icon>
-                </button>
-                <button mat-icon-button (click)="createDietPlan(patient.id)" title="Criar Plano de Dieta">
-                  <mat-icon>assignment</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-            <!-- Row shown when there is no matching data. -->
-            <tr class="mat-row" *matNoDataRow>
-              <td class="mat-cell" [attr.colspan]="displayedColumns.length">Nenhum paciente encontrado com "{{input.value}}"</td>
-            </tr>
-          </table>
-
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecione a página de pacientes"></mat-paginator>
+    <!-- Card da tabela -->
+    <div class="table-card">
+      <!-- Campo de busca -->
+      <div class="search-section">
+        <div class="form-group">
+          <label for="search">Filtrar pacientes</label>
+          <input 
+            id="search" 
+            type="text" 
+            class="form-control" 
+            [(ngModel)]="searchTerm" 
+            (input)="applyFilter()" 
+            placeholder="Ex: Maria, email ou telefone"
+          >
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
+
+      <!-- Tabela responsiva -->
+      <div class="table-wrapper">
+        <table class="patients-table" *ngIf="filteredPatients.length > 0; else noPatients">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Nascimento</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let patient of filteredPatients">
+              <td>{{ patient.name }}</td>
+              <td>{{ patient.email || 'N/A' }}</td>
+              <td>{{ patient.phone || 'N/A' }}</td>
+              <td>{{ formatDate(patient.birthDate) }}</td>
+              <td>
+                <span class="status-badge" [class.active]="patient.isActive" [class.inactive]="!patient.isActive">
+                  {{ getStatusText(patient.isActive) }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <button class="btn-action view" (click)="viewPatientDetails(patient.id)" title="Ver Detalhes">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+                <button class="btn-action edit" (click)="editPatientProfile(patient.id)" title="Editar Perfil">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="m18.5 2.5 3 3L12 15l-4 1 1-4Z"/>
+                  </svg>
+                </button>
+                <button class="btn-action delete" (click)="deletePatient(patient.id)" title="Deletar Paciente">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18"/>
+                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                    <path d="M8 6V4c0-1 1-2 2-2h4c0-1 1-2 2-2v2"/>
+                    <line x1="10" x2="10" y1="11" y2="17"/>
+                    <line x1="14" x2="14" y1="11" y2="17"/>
+                  </svg>
+                </button>
+                <button class="btn-action diet" (click)="createDietPlan(patient.id)" title="Criar Plano de Dieta">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <path d="M12 11h4"/>
+                    <path d="M12 16h4"/>
+                    <path d="M8 11h.01"/>
+                    <path d="M8 16h.01"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Mensagem quando não há pacientes -->
+        <ng-template #noPatients>
+          <div class="no-patients">
+            <p *ngIf="searchTerm">Nenhum paciente encontrado com "{{ searchTerm }}"</p>
+            <p *ngIf="!searchTerm && patients.length === 0">Nenhum paciente cadastrado ainda.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</app-dashboard-layout>

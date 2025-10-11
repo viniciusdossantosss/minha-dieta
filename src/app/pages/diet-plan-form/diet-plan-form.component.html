@@ -1,78 +1,79 @@
-<mat-card>
-  <mat-card-title>{{ isEditMode ? 'Editar Plano de Dieta' : 'Criar Novo Plano de Dieta' }}</mat-card-title>
-  <mat-card-content>
+<app-dashboard-layout [pageTitle]="isEditMode ? 'Editar Plano de Dieta' : 'Criar Plano de Dieta'" [userProfile]="userProfile">
+  <div class="form-card">
     <form [formGroup]="dietPlanForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Paciente</mat-label>
-          <mat-select formControlName="patientId" required>
-            <mat-option *ngFor="let patient of patients" [value]="patient.id">
-              {{ patient.name }}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="dietPlanForm.get('patientId')?.hasError('required')">Paciente é obrigatório</mat-error>
-        </mat-form-field>
+        <!-- Paciente -->
+        <div class="form-group">
+          <label for="patientId">Paciente *</label>
+          <select id="patientId" formControlName="patientId" class="form-control" [class.is-invalid]="isFieldInvalid('patientId')">
+            <option [ngValue]="null" disabled>Selecione um paciente</option>
+            <option *ngFor="let patient of patients" [value]="patient.id">{{ patient.name }}</option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('patientId')">
+            Paciente é obrigatório.
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Data do Plano</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date" required>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="dietPlanForm.get('date')?.hasError('required')">Data é obrigatória</mat-error>
-        </mat-form-field>
-      </div>
+        <!-- Data do Plano -->
+        <div class="form-group">
+          <label for="date">Data do Plano *</label>
+          <input id="date" type="date" formControlName="date" class="form-control" [class.is-invalid]="isFieldInvalid('date')">
+          <div class="error-message" *ngIf="isFieldInvalid('date')">
+            Data é obrigatória.
+          </div>
+        </div>
 
-      <h3 class="section-subtitle">Entradas do Plano de Refeição</h3>
-      <div formArrayName="mealPlanEntries" class="meal-entries-container">
-        <div *ngFor="let entry of mealPlanEntries.controls; let i = index" [formGroupName]="i" class="meal-entry-card">
-          <mat-card>
-            <mat-card-content>
-              <div class="form-grid">
-                <mat-form-field appearance="outline">
-                  <mat-label>Tipo de Refeição</mat-label>
-                  <mat-select formControlName="mealType" required>
-                    <mat-option *ngFor="let type of mealTypes" [value]="type">
-                      {{ type }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="entry.get('mealType')?.hasError('required')">Tipo de refeição é obrigatório</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                  <mat-label>Opção de Refeição</mat-label>
-                  <mat-select formControlName="mealOptionId" required>
-                    <mat-option *ngFor="let option of mealOptions" [value]="option.id">
-                      {{ option.name }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="entry.get('mealOptionId')?.hasError('required')">Opção de refeição é obrigatória</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Observações</mat-label>
-                  <textarea matInput formControlName="notes"></textarea>
-                </mat-form-field>
+        <!-- Entradas de Refeição Dinâmicas -->
+        <div formArrayName="mealPlanEntries" class="full-width">
+          <div *ngFor="let entry of mealPlanEntries.controls; let i = index" [formGroupName]="i" class="meal-entry-group">
+            <!-- Tipo de Refeição -->
+            <div class="form-group">
+              <label [for]="'mealType-' + i">Tipo de Refeição *</label>
+              <select [id]="'mealType-' + i" formControlName="mealType" class="form-control" [class.is-invalid]="isFieldInvalid('mealType', entry)">
+                <option [ngValue]="null" disabled>Selecione o tipo</option>
+                <option *ngFor="let type of mealTypes" [value]="type">{{ type }}</option>
+              </select>
+              <div class="error-message" *ngIf="isFieldInvalid('mealType', entry)">
+                Tipo de refeição é obrigatório.
               </div>
-            </mat-card-content>
-            <mat-card-actions align="end">
-              <button mat-icon-button color="warn" (click)="removeMealPlanEntry(i)" type="button">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </mat-card-actions>
-          </mat-card>
+            </div>
+
+            <!-- Opção de Refeição -->
+            <div class="form-group">
+              <label [for]="'mealOptionId-' + i">Opção de Refeição *</label>
+              <select [id]="'mealOptionId-' + i" formControlName="mealOptionId" class="form-control" [class.is-invalid]="isFieldInvalid('mealOptionId', entry)">
+                <option [ngValue]="null" disabled>Selecione a opção</option>
+                <option *ngFor="let option of mealOptions" [value]="option.id">{{ option.name }}</option>
+              </select>
+              <div class="error-message" *ngIf="isFieldInvalid('mealOptionId', entry)">
+                Opção de refeição é obrigatória.
+              </div>
+            </div>
+
+            <!-- Observações -->
+            <div class="form-group full-width">
+              <label [for]="'notes-' + i">Observações</label>
+              <textarea [id]="'notes-' + i" formControlName="notes" class="form-control"></textarea>
+            </div>
+
+            <div class="meal-entry-actions">
+              <button type="button" class="btn-remove" (click)="removeMealPlanEntry(i)">Remover Refeição</button>
+            </div>
+          </div>
         </div>
       </div>
-      <button mat-stroked-button color="primary" type="button" (click)="addMealPlanEntry()" class="add-entry-button">
-        <mat-icon>add</mat-icon> Adicionar Entrada de Refeição
+
+      <button type="button" class="btn btn-secondary add-entry-button" (click)="addMealPlanEntry()">
+        Adicionar Entrada de Refeição
       </button>
 
-      <mat-card-actions align="end" class="form-actions">
-        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="dietPlanForm.invalid">
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="dietPlanForm.invalid">
           {{ isEditMode ? 'Salvar Alterações' : 'Criar Plano de Dieta' }}
         </button>
-      </mat-card-actions>
+      </div>
     </form>
-  </mat-card-content>
-</mat-card>
+  </div>
+</app-dashboard-layout>
 

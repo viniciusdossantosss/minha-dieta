@@ -1,49 +1,60 @@
-<ng-container *ngIf="userProfile">
-  <app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
-    <div class="form-container">
-      <div class="form-header">
-        <h1 class="form-title">{{ pageTitle }}</h1>
-        <button class="btn-back" (click)="goBack()">Voltar</button>
-      </div>
-
-      <form [formGroup]="mealForm" (ngSubmit)="onSubmit()">
+<app-dashboard-layout [userProfile]="userProfile" [pageTitle]="pageTitle">
+  <div class="form-card">
+    <form [formGroup]="mealForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
         <!-- Nome da Refeição -->
         <div class="form-group">
-          <label for="name">Nome da Opção</label>
-          <input id="name" formControlName="name" placeholder="Ex: Omelete com queijo e tomate">
+          <label for="name">Nome da Opção *</label>
+          <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="isFieldInvalid('name')" placeholder="Ex: Omelete com queijo e tomate">
+          <div class="error-message" *ngIf="isFieldInvalid('name')">
+            Nome da opção é obrigatório.
+          </div>
         </div>
 
         <!-- Tipo de Refeição -->
         <div class="form-group">
-          <label for="type">Tipo de Refeição</label>
-          <select id="type" formControlName="type">
-            <option value="" disabled>Selecione o tipo</option>
+          <label for="type">Tipo de Refeição *</label>
+          <select id="type" formControlName="type" class="form-control" [class.is-invalid]="isFieldInvalid('type')">
+            <option [ngValue]="null" disabled>Selecione o tipo</option>
             <option *ngFor="let type of mealTypes" [value]="type">{{ type }}</option>
           </select>
+          <div class="error-message" *ngIf="isFieldInvalid('type')">
+            Tipo de refeição é obrigatório.
+          </div>
         </div>
 
         <!-- Itens da Refeição -->
-        <div class="items-section">
-          <h3>Itens da Refeição</h3>
+        <div class="full-width">
           <div formArrayName="items">
-            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="item-group">
-              <div class="form-group-inline">
-                <input formControlName="quantity" placeholder="Ex: 2 unidades">
-                <input formControlName="description" placeholder="Ex: Ovos">
+            <div *ngFor="let item of items.controls; let i=index" [formGroupName]="i" class="meal-entry-group">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label [for]="'quantity-' + i">Quantidade *</label>
+                  <input [id]="'quantity-' + i" type="text" formControlName="quantity" class="form-control" placeholder="Ex: 2 unidades">
+                </div>
+                <div class="form-group">
+                  <label [for]="'description-' + i">Descrição *</label>
+                  <input [id]="'description-' + i" type="text" formControlName="description" class="form-control" placeholder="Ex: Ovos">
+                </div>
               </div>
-              <button type="button" class="btn-remove" (click)="removeItem(i)">Remover</button>
+              <div class="meal-entry-actions">
+                <button type="button" class="btn-remove" (click)="removeItem(i)">Remover Item</button>
+              </div>
             </div>
           </div>
-          <button type="button" class="btn-add-item" (click)="addItem()">Adicionar Item</button>
         </div>
+      </div>
 
-        <!-- Botões de Ação -->
-        <div class="form-actions">
-          <button type="submit" class="btn-primary" [disabled]="mealForm.invalid">
-            {{ isEditMode ? 'Atualizar Refeição' : 'Salvar Refeição' }}
-          </button>
-        </div>
-      </form>
-    </div>
-  </app-dashboard-layout>
-</ng-container>
+      <button type="button" class="btn btn-secondary add-entry-button" (click)="addItem()">
+        Adicionar Item
+      </button>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="goBack()">Voltar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="mealForm.invalid">
+          {{ isEditMode ? 'Atualizar Refeição' : 'Salvar Refeição' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</app-dashboard-layout>

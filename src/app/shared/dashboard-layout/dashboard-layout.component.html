@@ -10,7 +10,7 @@
   <div class="main-content">
     <!-- Top Bar -->
     <div class="top-bar">
-      <button class="menu-toggle" (click)="toggleSideMenu()">
+      <button class="menu-toggle" (click)="toggleSideMenu()" *ngIf="!isDesktop">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>

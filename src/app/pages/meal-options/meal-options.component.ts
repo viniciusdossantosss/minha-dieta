@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router'; // Importar ActivatedRoute
+import { Router, ActivatedRoute } from '@angular/router';
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
 import { MealOption, MealType } from '../../models/meal.model';
 import { MealService } from '../../services/meal.service';
@@ -20,12 +20,12 @@ export class MealOptionsComponent implements OnInit {
   mealTypes: MealType[] = [MealType.BREAKFAST, MealType.MORNING_SNACK, MealType.LUNCH, MealType.AFTERNOON_SNACK, MealType.DINNER, MealType.EVENING_SNACK];
 
   userProfile: User | null = null;
-  patientId: number | null = null; // Adicionar patientId
+  patientId: number | null = null;
 
   constructor(
     private mealService: MealService, 
     private router: Router,
-    private route: ActivatedRoute, // Injetar ActivatedRoute
+    private route: ActivatedRoute,
     private authService: AuthService
   ) { }
 
@@ -40,7 +40,6 @@ export class MealOptionsComponent implements OnInit {
         this.patientId = +patientIdParam;
         this.loadMeals();
       } else {
-        // Redirecionar ou mostrar erro se patientId não estiver na rota
         this.router.navigate(['/nutritionist/patients']);
       }
     });
@@ -48,7 +47,7 @@ export class MealOptionsComponent implements OnInit {
 
   loadMeals(): void {
     if (this.patientId) {
-      this.mealService.getMealOptions(this.patientId).subscribe(options => {
+      this.mealService.getMealOptions(this.patientId).subscribe((options: MealOption[]) => {
         this.mealOptions = options;
         this.groupMealsByType();
       });

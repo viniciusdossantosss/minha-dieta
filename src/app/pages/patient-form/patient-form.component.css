@@ -1,89 +1,42 @@
 /* patient-form.component.css */
 
-:host {
-  display: flex;
-  justify-content: center;
-  padding: 1.5rem;
-  background-color: var(--body-background);
-}
-
-mat-card {
+.form-card {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 2rem;
   width: 100%;
   max-width: 800px;
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-mat-card-title {
-  font-size: var(--font-size-h2);
-  font-weight: bold;
-  color: var(--text-color);
-  margin-bottom: 1.5rem;
-  text-align: center;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 1.5rem;
 }
 
 .full-width {
-  grid-column: 1 / -1; /* Faz o campo ocupar a largura total */
+  grid-column: 1 / -1;
 }
 
-mat-card-actions {
+.form-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
+  flex-direction: column; /* Empilha os botões */
+  gap: 1rem; /* Espaçamento entre os botões */
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
 }
 
-/* Estilos para Angular Material */
-.mat-mdc-form-field {
-  width: 100%;
-}
-
-/* Cores dos botões (usando variáveis globais se definidas) */
-.mat-raised-button.mat-primary {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
-}
-
-.mat-raised-button.mat-primary:hover {
-  background-color: var(--primary-color-light);
-}
-
-.mat-button {
-  color: var(--primary-color);
-}
-
-.mat-button:hover {
-  background-color: rgba(var(--primary-color-rgb), 0.04);
+.form-actions button {
+  width: 100%; /* Faz os botões ocuparem a largura total */
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
-  mat-card {
-    padding: 1rem;
-  }
-
-  mat-card-title {
-    font-size: var(--font-size-h3);
-  }
-
   .form-grid {
     grid-template-columns: 1fr;
-  }
-
-  mat-card-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  mat-card-actions button {
-    width: 100%;
   }
 }

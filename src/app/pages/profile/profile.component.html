@@ -10,18 +10,25 @@
 
         <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
           <div class="form-group">
-            <label for="name">Nome Completo</label>
-            <input id="name" type="text" formControlName="name" class="form-control">
+            <label for="name">Nome Completo *</label>
+            <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="isFieldInvalid('name')">
+            <div class="error-message" *ngIf="isFieldInvalid('name')">
+              Nome é obrigatório.
+            </div>
           </div>
 
           <div class="form-group">
-            <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" class="form-control" readonly>
+            <label for="email">Email *</label>
+            <input id="email" type="email" formControlName="email" class="form-control" [class.is-invalid]="isFieldInvalid('email')" readonly>
+            <div class="error-message" *ngIf="isFieldInvalid('email')">
+              <span *ngIf="profileForm.get('email')?.errors?.['required']">Email é obrigatório.</span>
+              <span *ngIf="profileForm.get('email')?.errors?.['email']">Email deve ter um formato válido.</span>
+            </div>
           </div>
 
           <div class="form-group">
             <label for="phone">Telefone</label>
-            <input id="phone" type="tel" formControlName="phone" class="form-control">
+            <input id="phone" type="tel" formControlName="phone" class="form-control" [class.is-invalid]="isFieldInvalid('phone')">
           </div>
 
           <div class="form-group">
@@ -61,7 +68,7 @@
           </ng-container>
 
           <div class="form-actions">
-            <button type="submit" class="btn-primary" [disabled]="profileForm.invalid || isLoading">
+            <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || isLoading">
               <span *ngIf="!isLoading">Salvar Alterações</span>
               <span *ngIf="isLoading">Salvando...</span>
             </button>

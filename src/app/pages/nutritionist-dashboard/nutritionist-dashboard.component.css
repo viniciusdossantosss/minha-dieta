@@ -1,8 +1,8 @@
 /* Estilos para o Dashboard do Nutricionista */
 
 .welcome-section {
-  margin-bottom: calc(var(--spacing-unit) * 2);
-  padding: calc(var(--spacing-unit) * 1.5); /* Aumentar padding */
+  margin-bottom: 2rem;
+  padding: 1.5rem;
   background-color: var(--card-background);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -12,7 +12,7 @@
   font-size: var(--font-size-h1);
   font-weight: 700;
   color: var(--primary-color);
-  margin-bottom: calc(var(--spacing-unit) * 0.75); /* Ajustar margem */
+  margin-bottom: 0.75rem;
 }
 
 .welcome-subtitle {
@@ -24,8 +24,8 @@
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: calc(var(--spacing-unit) * 2); /* Aumentar gap */
-  margin-bottom: calc(var(--spacing-unit) * 2);
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 .stat-card {
@@ -34,8 +34,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   display: flex;
-  align-items: center;
-  padding: calc(var(--spacing-unit) * 2); /* Aumentar padding */
+  padding: 2rem;
 }
 
 .stat-card:hover {
@@ -46,14 +45,13 @@
 .stat-icon {
   font-size: 3rem;
   color: var(--primary-color);
-  margin-right: calc(var(--spacing-unit) * 1.5); /* Aumentar margem */
+  margin-right: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.stat-icon mat-icon {
-  font-size: 3rem;
+.stat-icon svg {
   width: 3rem;
   height: 3rem;
 }
@@ -82,8 +80,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: calc(var(--spacing-unit) * 1.5);
-  padding: 0 var(--spacing-unit);
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
 }
 
 .section-title {
@@ -106,14 +104,14 @@
 }
 
 .quick-actions-section {
-  margin-bottom: calc(var(--spacing-unit) * 2);
+  margin-bottom: 2rem;
 }
 
 .actions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: calc(var(--spacing-unit) * 2); /* Aumentar gap */
-  padding: 0 var(--spacing-unit);
+  gap: 2rem;
+  padding: 0 1rem;
 }
 
 .action-card {
@@ -121,26 +119,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: calc(var(--spacing-unit) * 2); /* Aumentar padding */
-  height: 160px; /* Ajustar altura para acomodar padding */
+  padding: 2rem;
+  height: 160px;
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   text-align: center;
   background-color: var(--card-background);
   color: var(--text-color);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
 }
 
 .action-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.action-card:hover .action-icon {
+  color: white;
+}
+
+.action-card:hover h3 {
+  color: white;
+}
+
+.action-card:hover p {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .action-card h3 {
   font-size: var(--font-size-h3);
   font-weight: 600;
-  margin-top: var(--spacing-unit);
-  margin-bottom: calc(var(--spacing-unit) * 0.5); /* Ajustar margem */
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
   color: var(--text-color);
 }
 
@@ -158,21 +172,20 @@
   justify-content: center;
 }
 
-.action-icon mat-icon {
-  font-size: 2.5rem;
+.action-icon svg {
   width: 2.5rem;
   height: 2.5rem;
 }
 
 .recent-patients-section {
-  margin-bottom: calc(var(--spacing-unit) * 2);
+  margin-bottom: 2rem;
 }
 
 .patients-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: calc(var(--spacing-unit) * 2); /* Aumentar gap */
-  padding: 0 var(--spacing-unit);
+  gap: 2rem;
+  padding: 0 1rem;
 }
 
 .patient-card {
@@ -187,8 +200,10 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
 }
 
-.patient-card mat-card-header {
-  padding: calc(var(--spacing-unit) * 1.5); /* Aumentar padding */
+.patient-header {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -197,8 +212,8 @@
   height: 48px;
   border-radius: 50%;
   overflow: hidden;
-  margin-right: var(--spacing-unit);
-  background-color: var(--body-background); /* Fallback */
+  margin-right: 1rem;
+  background-color: var(--body-background);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,89 +225,64 @@
   object-fit: cover;
 }
 
-.patient-card mat-card-title {
+.patient-name {
   font-size: 1.1rem;
   font-weight: 600;
   color: var(--text-color);
+  margin: 0 0 0.25rem 0;
 }
 
-.patient-card mat-card-subtitle {
+.patient-email {
   font-size: 0.9rem;
   color: var(--secondary-text);
+  margin: 0;
 }
 
-.patient-card mat-card-content {
-  padding: calc(var(--spacing-unit) * 1.5); /* Aumentar padding */
+.patient-content {
+  padding: 1.5rem;
   font-size: 0.95rem;
   color: var(--text-color);
 }
 
-.patient-card mat-card-content p {
-  margin-bottom: calc(var(--spacing-unit) * 0.75); /* Ajustar margem */
+.patient-content p {
+  margin-bottom: 0.75rem;
 }
 
-.patient-card mat-card-content strong {
+.patient-content strong {
   color: var(--primary-color);
 }
 
-.patient-card mat-card-actions {
-  padding: calc(var(--spacing-unit) * 0.75) var(--spacing-unit) var(--spacing-unit); /* Ajustar padding */
+.patient-actions {
+  padding: 0.75rem 1rem 1rem;
   border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
-  gap: calc(var(--spacing-unit) * 0.75); /* Ajustar gap */
+  gap: 0.75rem;
 }
 
-.patient-card mat-card-actions button {
+.patient-actions button {
   font-size: 0.85rem;
   padding: 0.5rem 1rem;
 }
 
 .no-patients-message {
   text-align: center;
-  padding: calc(var(--spacing-unit) * 2);
+  padding: 2rem;
   color: var(--secondary-text);
   font-size: 1.1rem;
   background-color: var(--card-background);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin: 0 var(--spacing-unit);
+  margin: 0 1rem;
 }
 
-/* Estilos para botões do Angular Material para harmonizar com o tema */
-.mat-raised-button.mat-primary {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+/* Estilos padronizados para botões */
+.patient-card {
+  border: 1px solid var(--border-color);
 }
 
-.mat-raised-button.mat-primary:hover {
-  background-color: var(--primary-color-dark);
-}
-
-.mat-raised-button.mat-accent {
-  background-color: var(--accent-color);
-  color: var(--text-color-light);
-}
-
-.mat-raised-button.mat-accent:hover {
-  background-color: var(--accent-color);
-}
-
-.mat-raised-button.mat-warn {
-  background-color: var(--warn-color);
-  color: var(--text-color-light);
-}
-
-.mat-raised-button.mat-warn:hover {
-  background-color: var(--warn-color);
-}
-
-.mat-button {
-  color: var(--primary-color);
-}
-
-.mat-button:hover {
-  background-color: rgba(var(--primary-color-rgb), 0.08);
+.patient-info {
+  flex-grow: 1;
 }
 
 /* Responsividade */
@@ -302,20 +292,19 @@
   }
   .stats-grid, .actions-grid, .patients-list {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--spacing-unit);
+    gap: 1rem;
   }
   .stat-number {
     font-size: 2rem;
   }
   .action-card {
     height: 120px;
-    padding: var(--spacing-unit);
+    padding: 1rem;
   }
   .action-card h3 {
     font-size: 1rem;
   }
-  .action-icon mat-icon {
-    font-size: 2rem;
+  .action-icon svg {
     width: 2rem;
     height: 2rem;
   }
@@ -323,7 +312,7 @@
 
 @media (max-width: 768px) {
   .welcome-section, .stats-grid, .quick-actions-section, .recent-patients-section {
-    margin-bottom: var(--spacing-unit);
+    margin-bottom: 1rem;
   }
   .section-header {
     flex-direction: column;
@@ -340,16 +329,16 @@
     padding: 0;
   }
   .stat-card, .action-card, .patient-card {
-    margin: 0 var(--spacing-unit);
+    margin: 0 1rem;
   }
   .action-card {
     height: auto;
   }
-  .patient-card mat-card-actions {
+  .patient-actions {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .patient-card mat-card-actions button {
+  .patient-actions button {
     width: 100%;
   }
 }
@@ -364,8 +353,7 @@
   .stat-number {
     font-size: 1.8rem;
   }
-  .stat-icon mat-icon {
-    font-size: 2.5rem;
+  .stat-icon svg {
     width: 2.5rem;
     height: 2.5rem;
   }

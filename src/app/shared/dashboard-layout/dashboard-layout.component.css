@@ -63,10 +63,3 @@
     padding: 2rem;
   }
 }
-
-/* Em telas grandes, o botão de menu pode ser escondido se o menu for sempre visível */
-@media (min-width: 1024px) {
-  .menu-toggle {
-    /* display: none; */ /* Opção: descomentar se o menu for sempre visível e não puder ser fechado */
-  }
-}

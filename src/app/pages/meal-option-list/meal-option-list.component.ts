@@ -16,6 +16,10 @@ import { AuthService } from '../../services/auth.service';
 
 // Models
 import { MealOption } from '../../models/meal.model';
+import { User } from '../../models/user.model';
+
+// Layout
+import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
 
 @Component({
   selector: 'app-meal-option-list',
@@ -27,6 +31,7 @@ import { MealOption } from '../../models/meal.model';
     MatButtonModule,
     MatIconModule,
     MatTableModule,
+    DashboardLayoutComponent,
   ],
   templateUrl: './meal-option-list.component.html',
   styleUrls: ['./meal-option-list.component.css'],
@@ -35,6 +40,7 @@ export class MealOptionListComponent implements OnInit, OnDestroy {
   mealOptions: MealOption[] = [];
   displayedColumns: string[] = ['name', 'mealType', 'items', 'actions'];
   nutritionistId: number | null = null;
+  userProfile: User | null = null;
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -47,6 +53,7 @@ export class MealOptionListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.add(this.authService.getCurrentUser().subscribe(user => {
       if (user && user.userType === 'nutritionist') {
+        this.userProfile = user;
         this.nutritionistId = user.id;
         this.loadMealOptions(user.id);
       } else {
@@ -57,11 +64,11 @@ export class MealOptionListComponent implements OnInit, OnDestroy {
   }
 
   loadMealOptions(nutritionistId: number): void {
-    this.subscriptions.add(this.mealService.getMealOptions(nutritionistId).subscribe(
-      (options) => {
+    this.subscriptions.add(this.mealService.getMealOptionsByNutritionist(nutritionistId).subscribe(
+      (options: MealOption[]) => {
         this.mealOptions = options;
       },
-      (error) => {
+      (error: any) => {
         console.error('Erro ao carregar opções de refeição:', error);
         this.snackBar.open('Erro ao carregar opções de refeição.', 'Fechar', { duration: 3000 });
       }
@@ -85,7 +92,7 @@ export class MealOptionListComponent implements OnInit, OnDestroy {
             this.loadMealOptions(this.nutritionistId);
           }
         },
-        (error) => {
+        (error: any) => {
           console.error('Erro ao excluir opção de refeição:', error);
           this.snackBar.open('Erro ao excluir opção de refeição.', 'Fechar', { duration: 3000 });
         }

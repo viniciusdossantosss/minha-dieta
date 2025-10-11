@@ -4,15 +4,6 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-// Angular Material Imports
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-
 // Services
 import { PatientService } from '../../services/patient.service';
 import { AuthService } from '../../services/auth.service';
@@ -21,19 +12,16 @@ import { AuthService } from '../../services/auth.service';
 import { Patient } from '../../models/patient.model';
 import { User } from '../../models/user.model';
 
+// Layout
+import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
+
 @Component({
   selector: 'app-patient-form',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
+    DashboardLayoutComponent,
   ],
   templateUrl: './patient-form.component.html',
   styleUrls: ['./patient-form.component.css'],
@@ -43,6 +31,7 @@ export class PatientFormComponent implements OnInit, OnDestroy {
   isEditMode: boolean = false;
   patientId: number | null = null;
   nutritionistId: number | null = null;
+  userProfile: User | null = null;
   private subscriptions: Subscription = new Subscription();
 
   constructor(
@@ -57,6 +46,7 @@ export class PatientFormComponent implements OnInit, OnDestroy {
     this.initForm();
     this.subscriptions.add(this.authService.getCurrentUser().subscribe(user => {
       if (user && user.userType === 'nutritionist') {
+        this.userProfile = user;
         this.nutritionistId = user.id;
         this.subscriptions.add(this.route.paramMap.subscribe(params => {
           const id = params.get('id');
@@ -148,6 +138,11 @@ export class PatientFormComponent implements OnInit, OnDestroy {
     } else {
       alert('Por favor, preencha todos os campos obrigatórios.');
     }
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.patientForm.get(field);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 
   onCancel(): void {

@@ -1,11 +1,5 @@
-<mat-card>
-    <mat-card-header class="header-section">
-      <mat-card-title class="page-title">Gerenciar Opções de Refeição</mat-card-title>
-      <button mat-raised-button color="primary" (click)="addMealOption()">
-        <mat-icon>add</mat-icon> Adicionar Opção
-      </button>
-    </mat-card-header>
-  
+<app-dashboard-layout pageTitle="Gerenciar Opções de Refeição" [userProfile]="userProfile">
+  <mat-card>
     <mat-card-content>
       <div class="table-container">
         <table mat-table [dataSource]="mealOptions" class="mat-elevation-z2">
@@ -56,4 +50,4 @@
       </div>
     </mat-card-content>
   </mat-card>
-  
+</app-dashboard-layout>

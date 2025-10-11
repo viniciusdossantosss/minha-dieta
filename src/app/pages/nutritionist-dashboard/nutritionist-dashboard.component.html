@@ -10,49 +10,84 @@
 
   <!-- Stats Cards -->
   <div class="stats-grid">
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-icon"><mat-icon>groups</mat-icon></div>
-        <div class="stat-content">
-          <h3 class="stat-number">{{ stats.totalPatients }}</h3>
-          <p class="stat-label">Pacientes Cadastrados</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.totalPatients }}</h3>
+        <p class="stat-label">Pacientes Cadastrados</p>
+      </div>
+    </div>
 
-    <mat-card class="stat-card">
-      <mat-card-content>
-        <div class="stat-icon"><mat-icon>restaurant_menu</mat-icon></div>
-        <div class="stat-content">
-          <h3 class="stat-number">{{ stats.totalDietPlans }}</h3>
-          <p class="stat-label">Planos de Dieta Criados</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div class="stat-card">
+      <div class="stat-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <path d="M12 11h4"/>
+          <path d="M12 16h4"/>
+          <path d="M8 11h.01"/>
+          <path d="M8 16h.01"/>
+        </svg>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-number">{{ stats.totalDietPlans }}</h3>
+        <p class="stat-label">Planos de Dieta Criados</p>
+      </div>
+    </div>
   </div>
 
   <!-- Quick Actions -->
   <div class="quick-actions-section">
     <h2 class="section-title">Ações Rápidas</h2>
     <div class="actions-grid">
-      <button mat-raised-button color="primary" class="action-card" (click)="addNewPatient()">
-        <div class="action-icon"><mat-icon>person_add</mat-icon></div>
+      <button class="action-card" (click)="addNewPatient()">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <line x1="22" x2="22" y1="11" y2="13"/>
+            <line x1="21" x2="23" y1="12" y2="12"/>
+          </svg>
+        </div>
         <div class="action-content">
           <h3>Adicionar Paciente</h3>
           <p>Cadastrar um novo paciente</p>
         </div>
       </button>
 
-      <button mat-raised-button color="accent" class="action-card" (click)="createDietPlan()">
-        <div class="action-icon"><mat-icon>assignment</mat-icon></div>
+      <button class="action-card" (click)="createDietPlan()">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <path d="M12 11h4"/>
+            <path d="M12 16h4"/>
+            <path d="M8 11h.01"/>
+            <path d="M8 16h.01"/>
+          </svg>
+        </div>
         <div class="action-content">
           <h3>Criar Plano de Dieta</h3>
           <p>Montar novo plano alimentar</p>
         </div>
       </button>
 
-      <button mat-raised-button color="warn" class="action-card" (click)="manageMealOptions()">
-        <div class="action-icon"><mat-icon>fastfood</mat-icon></div>
+      <button class="action-card" (click)="manageMealOptions()">
+        <div class="action-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
         <div class="action-content">
           <h3>Gerenciar Opções</h3>
           <p>Criar e editar opções de refeição</p>
@@ -69,26 +104,28 @@
     </div>
     
     <div class="patients-list" *ngIf="recentPatients.length > 0">
-      <mat-card *ngFor="let patient of recentPatients" class="patient-card">
-        <mat-card-header>
-          <div mat-card-avatar class="patient-avatar">
+      <div *ngFor="let patient of recentPatients" class="patient-card">
+        <div class="patient-header">
+          <div class="patient-avatar">
             <img [src]="patient.photoUrl || '/assets/default-avatar.png'" 
                  [alt]="patient.name"
                  onerror="this.src='/assets/default-avatar.png'">
           </div>
-          <mat-card-title>{{ patient.name }}</mat-card-title>
-          <mat-card-subtitle>{{ patient.email }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
+          <div class="patient-info">
+            <h3 class="patient-name">{{ patient.name }}</h3>
+            <p class="patient-email">{{ patient.email }}</p>
+          </div>
+        </div>
+        <div class="patient-content">
           <p><strong>Telefone:</strong> {{ patient.phone || 'Não informado' }}</p>
           <p><strong>Nascimento:</strong> {{ patient.birthDate ? (patient.birthDate | date:'dd/MM/yyyy') : 'Não informado' }}</p>
           <p><strong>Status:</strong> {{ getStatusText(patient.isActive) }}</p>
-        </mat-card-content>
-        <mat-card-actions align="end">
-          <button mat-button (click)="viewPatientDetails(patient.id)">Ver Detalhes</button>
-          <button mat-button color="accent" (click)="editPatientProfile(patient.id)">Editar Perfil</button>
-        </mat-card-actions>
-      </mat-card>
+        </div>
+        <div class="patient-actions">
+          <button class="btn btn-secondary" (click)="viewPatientDetails(patient.id)">Ver Detalhes</button>
+          <button class="btn btn-primary" (click)="editPatientProfile(patient.id)">Editar Perfil</button>
+        </div>
+      </div>
     </div>
 
     <div *ngIf="recentPatients.length === 0" class="no-patients-message">

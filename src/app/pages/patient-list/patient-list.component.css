@@ -1,101 +1,159 @@
-/* patient-list.component.css */
-
-:host {
-  display: block;
-  padding: 1.5rem;
-  background-color: var(--body-background);
-}
-
-.patient-list-container {
+.patients-container {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 1rem;
 }
 
 .header-section {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.page-title {
-  font-size: var(--font-size-h1);
-  font-weight: bold;
-  color: var(--text-color);
-  margin: 0;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
 }
 
 .table-card {
-  padding: 1.5rem;
+  background: var(--card-background);
   border-radius: var(--border-radius);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-.full-width-filter {
+.search-section {
+  margin-bottom: 2rem;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.patients-table {
   width: 100%;
-  margin-bottom: 1rem;
+  border-collapse: collapse;
+  margin-top: 1rem;
 }
 
-.mat-elevation-z8 {
-  box-shadow: none; /* Remove a sombra padrão da tabela para usar a do card */
+.patients-table th,
+.patients-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
 }
 
-table {
-  width: 100%;
+.patients-table th {
+  background-color: var(--body-background);
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.mat-column-actions {
-  width: 150px; /* Largura fixa para as ações */
-  text-align: center;
+.patients-table td {
+  color: var(--text-color);
+  font-size: 0.875rem;
 }
 
-.mat-column-isActive {
-  width: 80px;
+.patients-table tbody tr:hover {
+  background-color: var(--body-background);
 }
 
-.mat-column-birthDate {
-  width: 120px;
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Estilos para botões do Angular Material para harmonizar com o tema */
-.mat-raised-button.mat-primary {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
+.status-badge.active {
+  background-color: #d1fae5;
+  color: #065f46;
 }
 
-.mat-raised-button.mat-primary:hover {
-  background-color: var(--primary-color-light);
+.status-badge.inactive {
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
-.mat-icon-button.mat-primary {
+.actions-cell {
+  white-space: nowrap;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  margin: 0 0.25rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
   color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.mat-icon-button.mat-accent {
-  color: var(--primary-color); /* Usar primary para accent também, se desejar */
+.btn-action svg {
+  width: 16px;
+  height: 16px;
 }
 
-.mat-icon-button.mat-warn {
-  color: #f44336; /* Cor de aviso */
+.btn-action:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: scale(1.1);
+}
+
+.no-patients {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--secondary-text);
+}
+
+.no-patients p {
+  font-size: 1.125rem;
+  margin: 0;
 }
 
 /* Responsividade */
 @media (max-width: 768px) {
+  .patients-container {
+    padding: 0.5rem;
+  }
+  
+  .table-card {
+    padding: 1rem;
+  }
+  
   .header-section {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    justify-content: center;
   }
-
-  .page-title {
-    font-size: var(--font-size-h2);
+  
+  .header-section button {
+    width: 100%;
   }
-
-  .mat-mdc-table {
-    overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+  
+  .patients-table {
+    font-size: 0.75rem;
   }
+  
+  .patients-table th,
+  .patients-table td {
+    padding: 0.5rem;
+  }
+  
+  .btn-action {
+    padding: 0.25rem;
+    margin: 0 0.125rem;
+    font-size: 0.875rem;
+  }
+}
 
-  .mat-mdc-table .mat-column-actions {
-    min-width: 120px;
+@media (max-width: 640px) {
+  .patients-table th:nth-child(3),
+  .patients-table td:nth-child(3),
+  .patients-table th:nth-child(4),
+  .patients-table td:nth-child(4) {
+    display: none;
   }
 }

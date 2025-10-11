@@ -1,83 +1,97 @@
-<mat-card>
-  <mat-card-title>{{ isEditMode ? 'Editar Paciente' : 'Adicionar Novo Paciente' }}</mat-card-title>
-  <mat-card-content>
+<app-dashboard-layout [pageTitle]="isEditMode ? 'Editar Paciente' : 'Adicionar Paciente'" [userProfile]="userProfile">
+  <div class="form-card">
     <form [formGroup]="patientForm" (ngSubmit)="onSubmit()">
       <div class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Nome</mat-label>
-          <input matInput formControlName="name" required>
-          <mat-error *ngIf="patientForm.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
-        </mat-form-field>
+        <!-- Nome -->
+        <div class="form-group">
+          <label for="name">Nome *</label>
+          <input id="name" type="text" formControlName="name" class="form-control" [class.is-invalid]="isFieldInvalid('name')">
+          <div class="error-message" *ngIf="isFieldInvalid('name')">
+            Nome é obrigatório
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" type="email" required>
-          <mat-error *ngIf="patientForm.get('email')?.hasError('required')">Email é obrigatório</mat-error>
-          <mat-error *ngIf="patientForm.get('email')?.hasError('email')">Email inválido</mat-error>
-        </mat-form-field>
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input id="email" type="email" formControlName="email" class="form-control" [class.is-invalid]="isFieldInvalid('email')">
+          <div class="error-message" *ngIf="isFieldInvalid('email')">
+            <span *ngIf="patientForm.get('email')?.hasError('required')">Email é obrigatório.</span>
+            <span *ngIf="patientForm.get('email')?.hasError('email')">Email inválido.</span>
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Telefone</mat-label>
-          <input matInput formControlName="phone">
-        </mat-form-field>
+        <!-- Telefone -->
+        <div class="form-group">
+          <label for="phone">Telefone</label>
+          <input id="phone" type="tel" formControlName="phone" class="form-control">
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Data de Nascimento</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="birthDate">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
+        <!-- Data de Nascimento -->
+        <div class="form-group">
+          <label for="birthDate">Data de Nascimento</label>
+          <input id="birthDate" type="date" formControlName="birthDate" class="form-control">
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Peso (kg)</mat-label>
-          <input matInput formControlName="weight" type="number">
-        </mat-form-field>
+        <!-- Peso -->
+        <div class="form-group">
+          <label for="weight">Peso (kg)</label>
+          <input id="weight" type="number" formControlName="weight" class="form-control">
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Altura (cm)</mat-label>
-          <input matInput formControlName="height" type="number">
-        </mat-form-field>
+        <!-- Altura -->
+        <div class="form-group">
+          <label for="height">Altura (cm)</label>
+          <input id="height" type="number" formControlName="height" class="form-control">
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Gênero</mat-label>
-          <mat-select formControlName="gender">
-            <mat-option value="Masculino">Masculino</mat-option>
-            <mat-option value="Feminino">Feminino</mat-option>
-            <mat-option value="Outro">Outro</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <!-- Gênero -->
+        <div class="form-group">
+          <label for="gender">Gênero</label>
+          <select id="gender" formControlName="gender" class="form-control">
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+            <option value="Outro">Outro</option>
+          </select>
+        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Histórico Médico</mat-label>
-          <textarea matInput formControlName="medicalHistory"></textarea>
-        </mat-form-field>
+        <!-- Status -->
+        <div class="form-group">
+          <label for="isActive">Status *</label>
+          <select id="isActive" formControlName="isActive" class="form-control" [class.is-invalid]="isFieldInvalid('isActive')">
+            <option [value]="true">Ativo</option>
+            <option [value]="false">Inativo</option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('isActive')">
+            Status é obrigatório.
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Alergias</mat-label>
-          <textarea matInput formControlName="allergies"></textarea>
-        </mat-form-field>
+        <!-- Histórico Médico -->
+        <div class="form-group full-width">
+          <label for="medicalHistory">Histórico Médico</label>
+          <textarea id="medicalHistory" formControlName="medicalHistory" class="form-control"></textarea>
+        </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Restrições Alimentares</mat-label>
-          <textarea matInput formControlName="dietaryRestrictions"></textarea>
-        </mat-form-field>
+        <!-- Alergias -->
+        <div class="form-group full-width">
+          <label for="allergies">Alergias</label>
+          <textarea id="allergies" formControlName="allergies" class="form-control"></textarea>
+        </div>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Status</mat-label>
-          <mat-select formControlName="isActive" required>
-            <mat-option [value]="true">Ativo</mat-option>
-            <mat-option [value]="false">Inativo</mat-option>
-          </mat-select>
-          <mat-error *ngIf="patientForm.get('isActive')?.hasError('required')">Status é obrigatório</mat-error>
-        </mat-form-field>
+        <!-- Restrições Alimentares -->
+        <div class="form-group full-width">
+          <label for="dietaryRestrictions">Restrições Alimentares</label>
+          <textarea id="dietaryRestrictions" formControlName="dietaryRestrictions" class="form-control"></textarea>
+        </div>
       </div>
 
-      <mat-card-actions align="end">
-        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="patientForm.invalid">
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="patientForm.invalid">
           {{ isEditMode ? 'Salvar Alterações' : 'Adicionar Paciente' }}
         </button>
-      </mat-card-actions>
+      </div>
     </form>
-  </mat-card-content>
-</mat-card>
+  </div>
+</app-dashboard-layout>

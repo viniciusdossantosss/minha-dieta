@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SideMenuComponent } from '../side-menu/side-menu.component';
-import { User } from '../../models/user.model'; // Importar User
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -10,17 +10,36 @@ import { User } from '../../models/user.model'; // Importar User
   templateUrl: './dashboard-layout.component.html',
   styleUrls: ['./dashboard-layout.component.css']
 })
-export class DashboardLayoutComponent {
+export class DashboardLayoutComponent implements OnInit {
   @Input() pageTitle = 'Dashboard';
-  @Input() userProfile: User | null = null; // Aceitar User ou null
+  @Input() userProfile: User | null = null;
 
   isSideMenuOpen = false;
+  isDesktop = false;
+
+  ngOnInit(): void {
+    this.checkScreenWidth(window.innerWidth);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkScreenWidth((event.target as Window).innerWidth);
+  }
+
+  private checkScreenWidth(width: number): void {
+    this.isDesktop = width >= 768;
+    this.isSideMenuOpen = this.isDesktop;
+  }
 
   toggleSideMenu(): void {
-    this.isSideMenuOpen = !this.isSideMenuOpen;
+    if (!this.isDesktop) {
+      this.isSideMenuOpen = !this.isSideMenuOpen;
+    }
   }
 
   closeSideMenu(): void {
-    this.isSideMenuOpen = false;
+    if (!this.isDesktop) {
+      this.isSideMenuOpen = false;
+    }
   }
 }

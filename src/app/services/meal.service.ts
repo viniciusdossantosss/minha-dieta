@@ -1,24 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MealOption, MealType } from '../models/meal.model';
-import { HttpClient, HttpParams } from '@angular/common/http'; // Importar HttpClient e HttpParams
-import { API_CONFIG } from '../config/api.config'; // Importar API_CONFIG
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MealService {
-  private baseUrl = API_CONFIG.baseUrl; // Base URL da API
+  private baseUrl = API_CONFIG.baseUrl;
 
   constructor(private http: HttpClient) { }
 
-  // Modificado para aceitar patientId
+  // Para opções de um paciente específico
   getMealOptions(patientId: number, type?: MealType): Observable<MealOption[]> {
     let params = new HttpParams().set('patientId', patientId.toString());
     if (type) {
       params = params.set('type', type);
     }
     return this.http.get<MealOption[]>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}`, { params });
+  }
+
+  // Para todas as opções de um nutricionista
+  getMealOptionsByNutritionist(nutritionistId: number, type?: MealType): Observable<MealOption[]> {
+    let params = new HttpParams().set('nutritionistId', nutritionistId.toString());
+    if (type) {
+      params = params.set('type', type);
+    }
+    return this.http.get<MealOption[]>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}/nutritionist`, { params });
   }
 
   getMealOptionById(id: number, patientId: number): Observable<MealOption> {
@@ -29,6 +38,7 @@ export class MealService {
   addMealOption(mealData: Omit<MealOption, 'id'>): Observable<MealOption> {
     return this.http.post<MealOption>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}`, mealData);
   }
+
   updateMealOption(updatedOption: MealOption): Observable<MealOption> {
     const params = new HttpParams().set('patientId', updatedOption.patientId.toString());
     return this.http.put<MealOption>(`${this.baseUrl}${API_CONFIG.endpoints.mealOptions}/${updatedOption.id}`, updatedOption, { params });

@@ -1,13 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { Observable, of, forkJoin, Subscription } from 'rxjs'; // Importar Subscription
+import { Observable, of, forkJoin, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-// Angular Material Imports
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 
 // Shared Components and Services
 import { DashboardLayoutComponent } from '../../shared/dashboard-layout/dashboard-layout.component';
@@ -25,24 +20,20 @@ interface DashboardStats {
 }
 
 @Component({
-  selector: 'app-nutritionist-dashboard',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
     DashboardLayoutComponent,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
   ],
   templateUrl: './nutritionist-dashboard.component.html',
-  styleUrls: ['./nutritionist-dashboard.component.css'],
+  styleUrls: ['./nutritionist-dashboard.component.css']
 })
-export class NutritionistDashboardComponent implements OnInit {
+export class NutritionistDashboardComponent implements OnInit, OnDestroy {
   userProfile: User | null = null;
   stats: DashboardStats = { totalPatients: 0, totalDietPlans: 0 };
   recentPatients: Patient[] = [];
-  private subscriptions: Subscription = new Subscription();
+  private subscriptions = new Subscription();
 
   constructor(
     private patientService: PatientService,

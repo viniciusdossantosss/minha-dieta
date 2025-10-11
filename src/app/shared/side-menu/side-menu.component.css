@@ -93,7 +93,16 @@
 
 .nav-icon {
   margin-right: 1rem;
-  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 /* Rodapé do Menu */
@@ -150,5 +159,17 @@
 
   .menu-overlay.active {
     display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .side-menu {
+    left: 0;
+    box-shadow: none;
+  }
+
+  .close-button,
+  .menu-overlay {
+    display: none;
   }
 }

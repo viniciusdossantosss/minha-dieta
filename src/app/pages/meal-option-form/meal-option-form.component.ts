@@ -56,7 +56,7 @@ export class MealOptionFormComponent implements OnInit {
         this.isEditMode = true;
         this.mealId = +id;
         this.pageTitle = 'Editar Opção de Refeição';
-        this.mealService.getMealOptionById(this.mealId, this.patientId).subscribe(meal => {
+        this.mealService.getMealOptionById(this.mealId, this.patientId).subscribe((meal: any) => {
           if (meal) {
             this.mealForm.patchValue({ name: meal.name, type: meal.type });
             this.setItems(meal.items);
@@ -119,6 +119,11 @@ export class MealOptionFormComponent implements OnInit {
         });
       }
     }
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const control = this.mealForm.get(field);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 
   goBack(): void {

@@ -1,0 +1,95 @@
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.profile-card {
+  background: var(--card-background);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid var(--primary-color);
+}
+
+.profile-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 0.5rem 0;
+}
+
+.user-type {
+  color: var(--secondary-text);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.form-actions button {
+  width: 100%;
+}
+
+.general-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  border-left: 4px solid #dc2626;
+}
+
+.success-message {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  border-left: 4px solid var(--primary-color);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 0.5rem;
+  }
+  
+  .profile-card {
+    padding: 1.5rem;
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .profile-header h2 {
+    font-size: 1.25rem;
+  }
+}
